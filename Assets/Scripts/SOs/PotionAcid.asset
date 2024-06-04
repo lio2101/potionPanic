@@ -9,8 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ae260568a1f5ca40af5461807569e41, type: 3}
-  m_Name: HerbData
+  m_Script: {fileID: 11500000, guid: 2a4a0c243e138524db8af5ef66c79120, type: 3}
+  m_Name: PotionAcid
   m_EditorClassIdentifier: 
-  _type: 1
-  _icon: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
+  _type: 3
+  _icon: {fileID: 21300000, guid: f124451094bc2da4eb7a03d801d00299, type: 3}
+  _potionPrefab: {fileID: 6207733320669399186, guid: f4f523504733e8f4fb322fde12d50326,
+    type: 3}
