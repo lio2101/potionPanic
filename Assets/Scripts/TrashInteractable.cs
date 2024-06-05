@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace LJ
 {
@@ -14,10 +15,6 @@ namespace LJ
 		// --- Properties -------------------------------------------------------------------------------------------------
 
 		// --- Unity Functions --------------------------------------------------------------------------------------------
-		private void Awake()
-		{
-			
-		}
 
 		// --- Event callbacks --------------------------------------------------------------------------------------------
 

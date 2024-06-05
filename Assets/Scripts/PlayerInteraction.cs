@@ -11,14 +11,8 @@ namespace LJ
         // --- Fields -----------------------------------------------------------------------------------------------------
         private PlayerInventory _inventory;
         private IInteractable _nearestInteractable;
-        //private CauldronInteractable _cauldron;
-        //private TrashInteractable _trash;
-        //private HerbInteractable _objectInRange;
-
-        //private bool canInteract;
 
         // --- Properties -------------------------------------------------------------------------------------------------
-        //private bool CanInteract => _nearestInteractable != null || _cauldron != null || _trash != null;
 
         // --- Unity Functions --------------------------------------------------------------------------------------------
         void Start()
@@ -50,48 +44,24 @@ namespace LJ
                         break;
 
                     case CauldronInteractable cauldron:
-                        cauldron.AddHerb(_inventory.Inventory.Peek());
+                        Debug.Log($"Inventory empty: {_inventory.Inventory == null} Cauldron has Potion: {cauldron.HasPotionReady}");
+                        if(_inventory.Inventory.Count>0 && !cauldron.HasPotionReady && !cauldron.IsCooking)
+                        {
+                            cauldron.AddHerb(_inventory.Inventory.Peek());
+                            _inventory.RemoveHerb();
+                        }
+                        else if(_inventory.Inventory.Count==0 && _inventory.Potion == null && cauldron.HasPotionReady)
+                        {
+                            _inventory.AddPotion(cauldron.PassPotion());
+                        }
                         break;
+
 
                     case TrashInteractable:
                         _inventory.RemoveHerb();
                         _inventory.RemovePotion();
                         break;
                 }
-
-
-                //if(CanInteract)
-                //{
-                    //switch(_objectInRange.Item)
-                    //{
-                    //    case SO_HerbData herb:
-                    //        _inventory.AddHerb(herb);
-                    //        break;
-
-                    //    case SO_PotionData potion:
-                    //        _inventory.AddPotion(potion);
-                    //        break;
-                    //}
-
-                    //    if(_objectInRange != null && _objectInRange.Item is SO_HerbData herb)
-                    //    {
-                    //        _inventory.AddHerb(herb);
-                    //    }
-                    //    else if(_objectInRange != null && _objectInRange.Item is SO_PotionData potion)
-                    //    {
-                    //        _inventory.AddPotion(potion);
-                    //    }
-                    //    else if(_cauldron != null)
-                    //    {
-                    //        _cauldron.MakePotion();
-                    //    }
-                    //    else if (_trash != null)
-                    //    {
-                    //        _inventory.RemoveHerb();
-                    //        _inventory.RemovePotion();
-                    //    }
-
-                //}
 
             }
         }
@@ -100,19 +70,10 @@ namespace LJ
         public void OnTriggerEnter(Collider other)
         {
             Debug.Log($"OnTriggerEnter: {other.name}");
-            //canInteract = true;
             if(other.TryGetComponent(out IInteractable interactable))
             {
                 _nearestInteractable = interactable;
             }
-            //else if(other.TryGetComponent(out CauldronInteractable cauldron))
-            //{
-            //    _cauldron = cauldron;
-            //}
-            //else if(other.TryGetComponent(out TrashInteractable trsh))
-            //{
-            //    _trash = trsh;
-            //}
         }
 
         public void OnTriggerExit(Collider other)
@@ -120,7 +81,6 @@ namespace LJ
             if(_nearestInteractable != null && other.TryGetComponent(out IInteractable interactable) && interactable == _nearestInteractable)
             {
                 _nearestInteractable = null;
-                //canInteract = false;
             }
         }
 

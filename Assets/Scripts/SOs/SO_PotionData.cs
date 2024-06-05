@@ -23,13 +23,14 @@ namespace LJ
         [SerializeField] private PotionType _type;
         [SerializeField] private Sprite _icon;
         [SerializeField] private GameObject _potionPrefab;
+        
         // --- Properties -------------------------------------------------------------------------------------------------
 
         // --- Unity Functions --------------------------------------------------------------------------------------------
         public PotionType Type { get { return _type; } }
         public Sprite Icon { get { return _icon; } }
-
         public GameObject PotionPrefab { get { return _potionPrefab; } }
+        
 
         // --- Event callbacks --------------------------------------------------------------------------------------------
 

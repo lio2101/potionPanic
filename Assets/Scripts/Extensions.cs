@@ -1,31 +1,32 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.ShaderGraph;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace LJ
 {
-	public class ItemInteractable : MonoBehaviour, IInteractable
-    {
-        // --- Enums ------------------------------------------------------------------------------------------------------
-        
+	public static class Extensions
+	{
+		// --- Enums ------------------------------------------------------------------------------------------------------		
 
 		// --- Fields -----------------------------------------------------------------------------------------------------
-		[SerializeField] private ScriptableObject _item;
 
 		// --- Properties -------------------------------------------------------------------------------------------------
-		public ScriptableObject Item => _item;
 
-		// --- Unity Functions --------------------------------------------------------------------------------------------
-		void Start ()
-		{
-			
-		}
+		// --- Constructors -----------------------------------------------------------------------------------------------
 
 		// --- Event callbacks --------------------------------------------------------------------------------------------
 
 		// --- Public/Internal Methods ------------------------------------------------------------------------------------
-		
+		public static void SetAlpha(this Image img, float a) 
+		{ 
+			Color color = img.color;
+			color.a = a;
+			img.color = color;			
+		}
+
 		// --- Protected/Private Methods ----------------------------------------------------------------------------------
 		
 		// --------------------------------------------------------------------------------------------
