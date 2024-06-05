@@ -57,38 +57,6 @@ namespace LJ
             }
 
             return matchingRecipe != null ? matchingRecipe.PotionData : _failedPotion;
-
-            //int match = 0;
-
-            //foreach(PotionRecipe recipe in _recipes) //go through all recipes
-            //{
-            //    for(int i = 0; i < recipe.Ingredients.Length; i++) //check for every herb in recipe
-            //    {
-            //        for(int j = 0; j < data.Length; j++) //check for every herb in cauldron
-            //        {
-            //            if(recipe.Ingredients[i].Type == data[j].Type && recipe.Ingredients[i].IsProcessed == false)
-            //            {
-            //                recipe.Ingredients[i].IsProcessed = true;
-            //                match++;
-            //            }
-
-            //        }
-            //        recipe.Ingredients[i].IsProcessed = false;
-            //    }
-
-            //    if(match == 3)
-            //    {
-            //        Debug.Log("Found Potion Match");
-            //        return recipe.PotionData;
-            //    }
-            //    else 
-            //    { 
-            //        match = 0;
-            //    }
-            //}
-
-            //Debug.Log("Potion Failed");
-            //return _failedPotion;
         }
         // --- Protected/Private Methods ----------------------------------------------------------------------------------
 
