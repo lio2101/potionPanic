@@ -28,5 +28,4 @@ MonoBehaviour:
     - {fileID: 11400000, guid: d55517aead55d884b8686ee1f33d722f, type: 2}
     - {fileID: 11400000, guid: 8883467b02ada4d458ded74a4966f27c, type: 2}
     _potion: {fileID: 11400000, guid: e6a2b60c0d2e9d04c829f23b6bda6734, type: 2}
-  - _ingredients: []
-    _potion: {fileID: 11400000, guid: 3d83ac0ea8ba1614e8f9eb8f120643b6, type: 2}
+  _failedPotion: {fileID: 11400000, guid: 3d83ac0ea8ba1614e8f9eb8f120643b6, type: 2}

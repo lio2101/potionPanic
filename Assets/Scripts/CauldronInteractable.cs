@@ -12,35 +12,40 @@ namespace LJ
 
         // --- Fields -----------------------------------------------------------------------------------------------------
         [SerializeField] private SO_RecipeCollection _recipes;
+        [SerializeField, Min(0f)] private float _cookingDuration = 2f;
 
-        private Stack<SO_HerbData> _cauldronInventory = new Stack<SO_HerbData>();
-        private bool hasPotionReady;
-        private bool isCooking;
-        private SO_PotionData _newPotion;
-        private GameObject _newPotionPrefab;
+        private Stack<SO_HerbData> _herbs = new Stack<SO_HerbData>();
+        private bool _isCooking;
+        private SO_PotionData _activeRecipe;
+        private GameObject _currentPotion;
 
         // --- Properties -------------------------------------------------------------------------------------------------
-        public bool HasPotionReady { get { return hasPotionReady; } }
-        public bool IsCooking { get {  return isCooking; } }
+        public bool HasPotionReady => _currentPotion != null;
+        //public bool IsCooking  => _isCooking;
+
         // --- Unity Functions --------------------------------------------------------------------------------------------
 
         // --- Event callbacks --------------------------------------------------------------------------------------------
 
         // --- Public/Internal Methods ------------------------------------------------------------------------------------
+        public bool CanReceiveHerb()
+        {
+            return _herbs.Count < 3 && !HasPotionReady && !_isCooking;
+        }
+
         public void AddHerb(SO_HerbData data)
         {
-            if(_cauldronInventory.Count < 3 && !hasPotionReady && !isCooking)
+            if(CanReceiveHerb())
             {
-                _cauldronInventory.Push(data);
+                _herbs.Push(data);
                 Debug.Log($"Added {data.Type} to Cauldron");
 
-                if(_cauldronInventory.Count >= 3)
+                if(_herbs.Count >= 3)
                 {
                     Debug.Log("Cauldron Inventory full");
-                    isCooking = true;
-                    StartCoroutine(MakePotion());
+                    StartCoroutine(MakePotionRoutine());
 
-                    _cauldronInventory.Clear();
+                    _herbs.Clear();
                 }
             }
         }
@@ -48,27 +53,25 @@ namespace LJ
 
         public SO_PotionData PassPotion()
         {
-            Destroy(_newPotionPrefab);
-            hasPotionReady = false;
-            return _newPotion;
+            Destroy(_currentPotion);
+            return _activeRecipe;
         }
 
-        IEnumerator MakePotion()
+        IEnumerator MakePotionRoutine()
         {
-            _newPotion = _recipes.SearchRecipe(_cauldronInventory);
+            _isCooking = true;
+            _activeRecipe = _recipes.SearchRecipe(_herbs);
 
             Debug.Log("Initiate Cooking Procedures");
-            yield return new WaitForSeconds(2);
+            yield return new WaitForSeconds(_cookingDuration);
 
-            _newPotionPrefab = Instantiate(_newPotion.PotionPrefab);
-            _newPotionPrefab.transform.parent = this.transform;
-            _newPotionPrefab.transform.localPosition = new Vector3(0f, 1f, 0f);
-            Debug.Log($"Potion Prefab for {_newPotion.Type} Potion created");
+            _currentPotion = Instantiate(_activeRecipe.PotionPrefab, transform, false);
+            //_currentPotion.transform.localPosition = new Vector3(0f, 1f, 0f);
+            Debug.Log($"Potion Prefab for {_activeRecipe.Type} Potion created");
 
-            isCooking = false;
-            hasPotionReady = true;
-
+            _isCooking = false;
         }
+
         // --- Protected/Private Methods ----------------------------------------------------------------------------------
 
         // --------------------------------------------------------------------------------------------

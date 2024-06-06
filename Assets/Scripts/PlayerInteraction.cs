@@ -44,13 +44,13 @@ namespace LJ
                         break;
 
                     case CauldronInteractable cauldron:
-                        Debug.Log($"Inventory empty: {_inventory.Inventory == null} Cauldron has Potion: {cauldron.HasPotionReady}");
-                        if(_inventory.Inventory.Count>0 && !cauldron.HasPotionReady && !cauldron.IsCooking)
+                        //Debug.Log($"Inventory empty: {_inventory.Inventory == null} Cauldron has Potion: {cauldron.HasPotionReady}");
+                        if(_inventory.HasHerbs && cauldron.CanReceiveHerb())
                         {
-                            cauldron.AddHerb(_inventory.Inventory.Peek());
+                            cauldron.AddHerb(_inventory.Herbs.Peek());
                             _inventory.RemoveHerb();
                         }
-                        else if(_inventory.Inventory.Count==0 && _inventory.Potion == null && cauldron.HasPotionReady)
+                        else if(_inventory.HasHerbs == false && _inventory.Potion == null && cauldron.HasPotionReady)
                         {
                             _inventory.AddPotion(cauldron.PassPotion());
                         }
@@ -60,6 +60,16 @@ namespace LJ
                     case TrashInteractable:
                         _inventory.RemoveHerb();
                         _inventory.RemovePotion();
+                        break;
+
+                    case Customer customer:
+                        if(_inventory.Potion != null)
+                        {
+                            if(customer.TryGivePotion(_inventory.Potion))
+                            {
+                                _inventory.RemovePotion();
+                            }
+                        }
                         break;
                 }
 

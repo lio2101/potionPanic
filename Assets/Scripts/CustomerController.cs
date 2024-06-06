@@ -7,28 +7,55 @@ using UnityEngine;
 
 namespace LJ
 {
-    public class CustomerController : MonoBehaviour, IInteractable
+    public class CustomerController : MonoBehaviour
     {
+        [Serializable]
+        public class CustomerData
+        {
+            [SerializeField] private Transform _targetPosition;
+            [SerializeField] private Transform _spawnPosition;
+            
+            [NonSerialized] public Customer customer;
+            [NonSerialized] public int count;
+
+            public Vector3 SpawnPos => _spawnPosition.position;
+            public Vector3 TargetPos => _targetPosition.position;
+
+            public void CreateCustomer(Customer prefab)
+            {
+                customer = Instantiate(prefab, _spawnPosition.position, Quaternion.identity);
+                count++;
+            }
+
+        }
+
         // --- Enums ------------------------------------------------------------------------------------------------------
 
         // --- Fields -----------------------------------------------------------------------------------------------------
         //[SerializeField] private GameObject[] _customersTeam1 = new GameObject[ORDERSPERROUND];
         //[SerializeField] private GameObject[] _customersTeam2 = new GameObject[ORDERSPERROUND];
 
-        [SerializeField] private Transform _windowTeam1;
-        [SerializeField] private Transform _windowTeam2;
-
         [SerializeField] private Customer[] _customerPrefabs;
-        [SerializeField] private int _offset = 3;
+        [SerializeField] private CustomerData[] _customerDatas = new CustomerData[2];
+
+        //[SerializeField] private Transform _windowTeam1;
+        //[SerializeField] private Transform _windowTeam2;
+        //[SerializeField] private int _offset = 3;
+
         [SerializeField] private float _moveSpeed = 2;
 
-        const int ORDERSPERROUND = 10;
+        const int ORDERS_PER_ROUND = 10;
 
-        private Vector3 _spawnPosition1;
-        private Vector3 _spawnPosition2;
+        //private Vector3 _spawnPosition1;
+        //private Vector3 _spawnPosition2;
 
-        private Customer _customerTeam1;
-        private Customer _customerTeam2;
+        //private Customer _customerTeam1;
+        //private Customer _customerTeam2;
+
+        //private float directionToMoveX;
+
+        //private int _customerCount1 = 0;
+        //private int _customerCount2 = 0;
 
 
         // --- Properties -------------------------------------------------------------------------------------------------
@@ -36,64 +63,74 @@ namespace LJ
         // --- Unity Functions --------------------------------------------------------------------------------------------
         private void Start()
         {
-            _spawnPosition1 = new Vector3(_windowTeam1.position.x - _offset, _windowTeam1.position.y + 0.5f, _windowTeam1.position.z);
-            _spawnPosition2 = new Vector3(_windowTeam2.position.x + _offset, _windowTeam2.position.y + 0.5f, _windowTeam2.position.z);
-            _customerTeam1 = CreateCustomer(_spawnPosition1);
-            _customerTeam2 = CreateCustomer(_spawnPosition2);
+            foreach(CustomerData customerData in _customerDatas)
+            {
+                customerData.CreateCustomer(_customerPrefabs.GetRandomElement());
+            }
         }
 
         void LateUpdate()
         {
-            if(_customerTeam1.IsEntering)
+            foreach(CustomerData customerData in _customerDatas)
             {
-                float directionToMoveX = _windowTeam1.position.x - _customerTeam1.transform.position.x;
-                directionToMoveX = Mathf.Sign(directionToMoveX) * Time.deltaTime * _moveSpeed;
-
-                float maxDistanceX = Mathf.Abs(_windowTeam1.position.x - _customerTeam1.transform.position.x);
-
-                _customerTeam1.transform.position = new Vector3(
-                    Mathf.MoveTowards(_customerTeam1.transform.position.x, _windowTeam1.position.x, Mathf.Min(maxDistanceX, directionToMoveX)),
-                    _customerTeam1.transform.position.y,
-                    _customerTeam1.transform.position.z
-                );
-            }
-            else if(_customerTeam1.IsLeaving)
-            {
-                _customerTeam1.transform.position = Vector3.MoveTowards(_spawnPosition1, _windowTeam1.position, Time.deltaTime * _moveSpeed);
-            }
-
-            if(_customerTeam2.IsEntering)
-            {
-                float directionToMoveX = _windowTeam2.position.x - _customerTeam2.transform.position.x;
-                directionToMoveX = Mathf.Sign(directionToMoveX) * Time.deltaTime * _moveSpeed;
-
-                float maxDistanceX = Mathf.Abs(_windowTeam2.position.x - _customerTeam2.transform.position.x);
-
-                _customerTeam2.transform.position = new Vector3(
-                    Mathf.MoveTowards(_customerTeam2.transform.position.x, _windowTeam2.position.x, Mathf.Min(maxDistanceX, directionToMoveX)),
-                    _customerTeam2.transform.position.y,
-                    _customerTeam2.transform.position.z
-                    );
-            }
-            else if(_customerTeam2.IsLeaving)
-            {
-                _customerTeam2.transform.position = Vector3.MoveTowards(_customerTeam2.transform.position, _windowTeam2.position, Time.deltaTime * _moveSpeed);
-            }
-
+                MoveCustomer(customerData);
+            };
         }
 
         // --- Event callbacks --------------------------------------------------------------------------------------------
 
         // --- Public/Internal Methods ------------------------------------------------------------------------------------
-        public Customer CreateCustomer(Vector3 spawnPos)
+        public Vector3 Move(Vector3 current, Vector3 target)
         {
-            Customer prefab = _customerPrefabs.GetRandomElement();
-            return Instantiate(prefab, spawnPos, Quaternion.identity);
+            //direction = Mathf.Sign(direction) * Time.deltaTime * _moveSpeed;
+            //float maxDistanceX = Mathf.Abs(target.x - current.x);
+            //return new Vector3(Mathf.MoveTowards(current.x, target.x, Mathf.Min(maxDistanceX, direction)), current.y, current.z);
+            return Vector3.MoveTowards(current, target, _moveSpeed * Time.deltaTime);
         }
 
         //public void MoveCustomer(Transform customer, Transform )
 
         // --- Protected/Private Methods ----------------------------------------------------------------------------------
+        private void MoveCustomer(CustomerData data)
+        {
+            Customer customer = data.customer;
+            
+            if(customer.IsEntering)
+            {
+                MoveTowards(data.TargetPos, OnTargetReached);
+
+                void OnTargetReached()
+                {
+                    customer.IsEntering = false;
+                    customer.Wait();
+                }
+            }
+            else if(customer.IsLeaving)
+            {
+                MoveTowards(data.SpawnPos, OnSpawnReached);
+
+                void OnSpawnReached()
+                {
+                    Destroy(customer.gameObject);
+                    if(data.count < ORDERS_PER_ROUND)
+                    {
+                        data.CreateCustomer(_customerPrefabs.GetRandomElement());
+                        Debug.Log("Created new customer");
+                    }
+                }
+            }
+
+            void MoveTowards(Vector3 targetPos, Action onTargetReached)
+            {
+                customer.transform.position = Move(customer.transform.position, targetPos);
+
+                if(Mathf.Approximately(customer.transform.position.x, targetPos.x) 
+                    && Mathf.Approximately(customer.transform.position.z, targetPos.z))
+                {
+                    onTargetReached?.Invoke();
+                }
+            }
+        }
 
         // --------------------------------------------------------------------------------------------
     }

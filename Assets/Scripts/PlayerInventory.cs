@@ -12,17 +12,30 @@ namespace LJ
     public class PlayerInventory : MonoBehaviour
     {
         // --- Enums ------------------------------------------------------------------------------------------------------
+        public enum Teams
+        {
+            none = 0,
+            Team1,
+            Team2
+        }
 
         // --- Fields -----------------------------------------------------------------------------------------------------
         [SerializeField] private Image[] _inventorySlots = new Image[3];
+        [SerializeField] private Teams _team;
 
-        private Stack<SO_HerbData> _inventory = new Stack<SO_HerbData>();
+        private Stack<SO_HerbData> _herbs = new Stack<SO_HerbData>();
 
         private SO_PotionData _potion;
 
         // --- Properties -------------------------------------------------------------------------------------------------
-        public Stack<SO_HerbData> Inventory { get { return _inventory; } }
+        public Stack<SO_HerbData> Herbs { get { return _herbs; } }
         public SO_PotionData Potion { get { return _potion; } }
+        public Teams Team { get { return _team; } set { _team = value; } }
+
+        public bool HasHerbs => _herbs.Count > 0;
+        public bool CanRecieveHerb => _herbs.Count < 3 && _potion == null;
+        public bool CanRecievePotion => _herbs.Count == 0 && _potion == null;
+
         // --- Unity Functions --------------------------------------------------------------------------------------------
         private void Awake()
         {
@@ -34,9 +47,9 @@ namespace LJ
         // --- Public/Internal Methods ------------------------------------------------------------------------------------
         public void AddHerb(SO_HerbData data)
         {
-            if(_inventory.Count < 3 && _potion == null)
+            if(CanRecieveHerb)
             {
-                _inventory.Push(data);
+                _herbs.Push(data);
 
                 UpdateInventoryUI();
                 Debug.Log($"Added {data.Type} to inventory");
@@ -47,10 +60,9 @@ namespace LJ
 
         public void RemoveHerb()
         {
-            if(_inventory.Count > 0)
+            if(HasHerbs)
             {
-                SO_HerbData lastItem = _inventory.Peek();
-                _inventory.Pop();
+                SO_HerbData lastItem = _herbs.Pop();
 
                 UpdateInventoryUI();
                 Debug.Log($"Removed {lastItem.Type} from inventory");
@@ -60,7 +72,7 @@ namespace LJ
 
         public void AddPotion(SO_PotionData data)
         {
-            if(_inventory.Count == 0 && _potion == null)
+            if(CanRecievePotion)
             {
                 _potion = data;
                 UpdateInventoryUI();
@@ -84,7 +96,7 @@ namespace LJ
         {
             int index = 0;
 
-            foreach(SO_HerbData item in _inventory)
+            foreach(SO_HerbData item in _herbs)
             {
                 _inventorySlots[index].sprite = item.Icon;
                 index++;

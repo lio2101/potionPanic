@@ -11,13 +11,14 @@ namespace LJ
         // --- Enums ------------------------------------------------------------------------------------------------------		
 
         // --- Fields -----------------------------------------------------------------------------------------------------
-        [SerializeField] private SO_PotionData _potionOrder;
-        [SerializeField] private int timer;
         [SerializeField] private Image _icon;
+        [SerializeField] private Canvas _canvas;
+        [SerializeField] private SO_RecipeCollection _potions;
 
+        private SO_PotionData _potionOrder;
         private bool _isEntering, _isWaiting, _isLeaving;
 
-        const int ORDERTIME = 60;
+        const int ORDER_TIME = 2;
 
         // --- Properties -------------------------------------------------------------------------------------------------
         public bool IsEntering { get { return _isEntering; } set {  _isEntering = value; } }
@@ -26,10 +27,15 @@ namespace LJ
         // --- Unity Functions -----------------------------------------------------------------------------------------------
         void Start()
         {
-            //EnterShop();
-            //_customerPrefab = prefab;
+            _potionOrder = _potions.Recipes.GetRandomElement().PotionData;
+            _icon.sprite = _potionOrder.Icon;
+
             _isEntering = true;
-            //_icon.sprite = _potionOrder.Icon;
+            _canvas = GetComponentInChildren<Canvas>();
+            _icon = GetComponentInChildren<Image>();
+            this.GetComponent<BoxCollider>().enabled = false;
+            _canvas.enabled = false;
+
 
         }
 
@@ -37,23 +43,36 @@ namespace LJ
 
         // --- Public/Internal Methods ------------------------------------------------------------------------------------
 
-        public void InspectPotion(SO_PotionData potion)
+        public bool TryGivePotion(SO_PotionData potion)
         {
             if(_potionOrder.Type == potion.Type)
             {
                 StopCoroutine(CountDown());
                 Debug.Log("Force Stop Timer");
+                _isWaiting = false;
                 _isLeaving = true;
+                _canvas.enabled = false;
+                return true;
             }
+
+            return false;
+        }
+
+        public void Wait()
+        {
+            _canvas.enabled = true;
+            this.GetComponent<BoxCollider>().enabled = true;
+            StartCoroutine(CountDown());
         }
 
         public IEnumerator CountDown()
         {
             Debug.Log("StartTimer");
             _isWaiting = true;
-            yield return new WaitForSeconds(ORDERTIME);
+            yield return new WaitForSeconds(ORDER_TIME);
             _isWaiting = false;
             _isLeaving = true;
+            _canvas.enabled = false;
             Debug.Log("Stop Timer");
         }
         // --- Protected/Private Methods ----------------------------------------------------------------------------------
