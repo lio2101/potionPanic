@@ -21,7 +21,6 @@ namespace LJ
 
         // --- Properties -------------------------------------------------------------------------------------------------
         public bool HasPotionReady => _currentPotion != null;
-        //public bool IsCooking  => _isCooking;
 
         // --- Unity Functions --------------------------------------------------------------------------------------------
 

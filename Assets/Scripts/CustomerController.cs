@@ -32,31 +32,11 @@ namespace LJ
         // --- Enums ------------------------------------------------------------------------------------------------------
 
         // --- Fields -----------------------------------------------------------------------------------------------------
-        //[SerializeField] private GameObject[] _customersTeam1 = new GameObject[ORDERSPERROUND];
-        //[SerializeField] private GameObject[] _customersTeam2 = new GameObject[ORDERSPERROUND];
-
         [SerializeField] private Customer[] _customerPrefabs;
         [SerializeField] private CustomerData[] _customerDatas = new CustomerData[2];
-
-        //[SerializeField] private Transform _windowTeam1;
-        //[SerializeField] private Transform _windowTeam2;
-        //[SerializeField] private int _offset = 3;
-
         [SerializeField] private float _moveSpeed = 2;
 
         const int ORDERS_PER_ROUND = 10;
-
-        //private Vector3 _spawnPosition1;
-        //private Vector3 _spawnPosition2;
-
-        //private Customer _customerTeam1;
-        //private Customer _customerTeam2;
-
-        //private float directionToMoveX;
-
-        //private int _customerCount1 = 0;
-        //private int _customerCount2 = 0;
-
 
         // --- Properties -------------------------------------------------------------------------------------------------
 
@@ -82,13 +62,8 @@ namespace LJ
         // --- Public/Internal Methods ------------------------------------------------------------------------------------
         public Vector3 Move(Vector3 current, Vector3 target)
         {
-            //direction = Mathf.Sign(direction) * Time.deltaTime * _moveSpeed;
-            //float maxDistanceX = Mathf.Abs(target.x - current.x);
-            //return new Vector3(Mathf.MoveTowards(current.x, target.x, Mathf.Min(maxDistanceX, direction)), current.y, current.z);
             return Vector3.MoveTowards(current, target, _moveSpeed * Time.deltaTime);
         }
-
-        //public void MoveCustomer(Transform customer, Transform )
 
         // --- Protected/Private Methods ----------------------------------------------------------------------------------
         private void MoveCustomer(CustomerData data)

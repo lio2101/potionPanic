@@ -44,11 +44,8 @@ namespace LJ
                 return _failedPotion;
             }
 
-            // Data with duplicate ingredients can never produce a potion as recipes always use 3 unique ingredients
             if(data.Distinct().Count() < INGREDIENT_AMOUNT)
                 return _failedPotion;
-
-            //PotionRecipe matchingRecipe = _recipes.FirstOrDefault(r => r.Ingredients.Union(data).Count() == INGREDIENT_AMOUNT);            
 
             PotionRecipe matchingRecipe = _recipes.FirstOrDefault(GetMatch);
             bool GetMatch(PotionRecipe recipe)

@@ -34,36 +34,46 @@ namespace LJ
                         switch(item.Item)
                         {
                             case SO_HerbData herb:
-                                _inventory.AddHerb(herb);
+                                if(_inventory.CanRecieveHerb)
+                                {
+                                    _inventory.AddHerb(herb);
+                                }
                                 break;
 
                             case SO_PotionData potion:
-                                _inventory.AddPotion(potion);
+                                if(_inventory.CanRecievePotion)
+                                {
+                                    _inventory.AddPotion(potion);
+                                }
                                 break;
                         }
                         break;
 
                     case CauldronInteractable cauldron:
-                        //Debug.Log($"Inventory empty: {_inventory.Inventory == null} Cauldron has Potion: {cauldron.HasPotionReady}");
                         if(_inventory.HasHerbs && cauldron.CanReceiveHerb())
                         {
                             cauldron.AddHerb(_inventory.Herbs.Peek());
                             _inventory.RemoveHerb();
                         }
-                        else if(_inventory.HasHerbs == false && _inventory.Potion == null && cauldron.HasPotionReady)
+                        else if(_inventory.CanRecievePotion && cauldron.HasPotionReady)
                         {
                             _inventory.AddPotion(cauldron.PassPotion());
                         }
                         break;
 
-
                     case TrashInteractable:
-                        _inventory.RemoveHerb();
-                        _inventory.RemovePotion();
+                        if(_inventory.HasHerbs)
+                        {
+                            _inventory.RemoveHerb();
+                        }
+                        else if(_inventory.HasPotion)
+                        {
+                            _inventory.RemovePotion();
+                        }
                         break;
 
                     case Customer customer:
-                        if(_inventory.Potion != null)
+                        if(_inventory.HasPotion)
                         {
                             if(customer.TryGivePotion(_inventory.Potion))
                             {
