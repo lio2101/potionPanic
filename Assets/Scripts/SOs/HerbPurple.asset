@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: HerbPurple
   m_EditorClassIdentifier: 
   _type: 5
-  _icon: {fileID: 21300000, guid: 62f681824d60d3440849e68f397cc41e, type: 3}
+  _icon: {fileID: 21300000, guid: 9247ad8ac1cbb2f4d905efc755beb34f, type: 3}
+  isProcessed: 0

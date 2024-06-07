@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: HerbGreen
   m_EditorClassIdentifier: 
   _type: 4
-  _icon: {fileID: 21300000, guid: 6e5ca0222b645aa4e8087071b0eb6462, type: 3}
+  _icon: {fileID: 21300000, guid: c7ed6b2c1304ac240a1ff8f78976d886, type: 3}
+  isProcessed: 0

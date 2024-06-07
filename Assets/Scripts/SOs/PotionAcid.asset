@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: PotionAcid
   m_EditorClassIdentifier: 
   _type: 3
-  _icon: {fileID: 21300000, guid: f124451094bc2da4eb7a03d801d00299, type: 3}
+  _icon: {fileID: 21300000, guid: 3c27e5b0555c8fa4996e25d5f348b0a9, type: 3}
   _potionPrefab: {fileID: 6207733320669399186, guid: f4f523504733e8f4fb322fde12d50326,
     type: 3}

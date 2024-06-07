@@ -36,13 +36,15 @@ namespace LJ
         [SerializeField] private CustomerData[] _customerDatas = new CustomerData[2];
         [SerializeField] private float _moveSpeed = 2;
 
-        const int ORDERS_PER_ROUND = 10;
+        private GameManager _gm;
 
         // --- Properties -------------------------------------------------------------------------------------------------
 
         // --- Unity Functions --------------------------------------------------------------------------------------------
         private void Start()
         {
+            _gm = GameManager.Instance;
+
             foreach(CustomerData customerData in _customerDatas)
             {
                 customerData.CreateCustomer(_customerPrefabs.GetRandomElement());
@@ -87,11 +89,11 @@ namespace LJ
                 void OnSpawnReached()
                 {
                     Destroy(customer.gameObject);
-                    if(data.count < ORDERS_PER_ROUND)
-                    {
-                        data.CreateCustomer(_customerPrefabs.GetRandomElement());
-                        Debug.Log("Created new customer");
-                    }
+                    //if(data.count < ORDERS_PER_ROUND)
+                    //{
+                    //    data.CreateCustomer(_customerPrefabs.GetRandomElement());
+                    //    Debug.Log("Created new customer");
+                    //}
                 }
             }
 

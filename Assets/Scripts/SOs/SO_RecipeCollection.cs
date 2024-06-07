@@ -15,8 +15,10 @@ namespace LJ
         {
             [SerializeField] private SO_HerbData[] _ingredients;
             [SerializeField] private SO_PotionData _potion;
+            [SerializeField] private Material _recipeImage;
             public SO_HerbData[] Ingredients { get { return _ingredients; } }
             public SO_PotionData PotionData { get { return _potion; } }
+            public Material RecipeImage { get { return _recipeImage; } }
         }
 
         // --- Enums ------------------------------------------------------------------------------------------------------

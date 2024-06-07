@@ -9,14 +9,17 @@ using static UnityEditor.Progress;
 
 namespace LJ
 {
+
     public class PlayerInventory : MonoBehaviour
     {
         // --- Enums ------------------------------------------------------------------------------------------------------
 
         // --- Fields -----------------------------------------------------------------------------------------------------
         [SerializeField] private Image[] _inventorySlots = new Image[3];
+        [SerializeField] private Image _potionSlot;
 
         private Stack<SO_HerbData> _herbs = new Stack<SO_HerbData>();
+        private Canvas _canvas;
 
         private SO_PotionData _potion;
 
@@ -28,9 +31,14 @@ namespace LJ
         public bool HasPotion => _potion != null;
         public bool CanRecieveHerb => _herbs.Count < 3 && _potion == null;
         public bool CanRecievePotion => _herbs.Count == 0 && _potion == null;
+        public bool IsInventoryEmpty => _herbs.Count == 0 && _potion == null;
 
         // --- Unity Functions --------------------------------------------------------------------------------------------
-
+        private void Start()
+        {
+            _canvas = GetComponentInChildren<Canvas>();
+            _canvas.enabled = false;
+        }
         // --- Event callbacks --------------------------------------------------------------------------------------------
 
         // --- Public/Internal Methods ------------------------------------------------------------------------------------
@@ -67,21 +75,24 @@ namespace LJ
         private void UpdateInventoryUI()
         {
             int index = 0;
-
+            _canvas.enabled = true;
             foreach(SO_HerbData item in _herbs)
             {
+                _inventorySlots[index].enabled = true;
                 _inventorySlots[index].sprite = item.Icon;
                 index++;
             }
             if(_potion != null)
             {
-                _inventorySlots[index].sprite = _potion.Icon;
+                _potionSlot.enabled = true;
+                _potionSlot.sprite = _potion.Icon;
                 index++;
             }
+            else { _potionSlot.enabled = false; }
 
             for(; index < _inventorySlots.Length; index++)
             {
-                _inventorySlots[index].sprite = null;
+                _inventorySlots[index].enabled = false;
             }
 
         }

@@ -18,14 +18,17 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 0fe8584af154da8438b8f3b267b36068, type: 2}
     - {fileID: 11400000, guid: ea9ea685b117c00408e6d281b81cd91e, type: 2}
     _potion: {fileID: 11400000, guid: 5e442b028ebda70428ea0130b96a02a3, type: 2}
+    _recipeImage: {fileID: 2100000, guid: 357e8b305949ff24597ab720fdd0e5a2, type: 2}
   - _ingredients:
     - {fileID: 11400000, guid: 8883467b02ada4d458ded74a4966f27c, type: 2}
     - {fileID: 11400000, guid: d55517aead55d884b8686ee1f33d722f, type: 2}
     - {fileID: 11400000, guid: 0fe8584af154da8438b8f3b267b36068, type: 2}
     _potion: {fileID: 11400000, guid: c9aad904136d7d0458f12fdb9dae8e19, type: 2}
+    _recipeImage: {fileID: 2100000, guid: 9460cf2021046ca48a8dbd8017a6a8c6, type: 2}
   - _ingredients:
     - {fileID: 11400000, guid: ea9ea685b117c00408e6d281b81cd91e, type: 2}
     - {fileID: 11400000, guid: d55517aead55d884b8686ee1f33d722f, type: 2}
     - {fileID: 11400000, guid: 8883467b02ada4d458ded74a4966f27c, type: 2}
     _potion: {fileID: 11400000, guid: e6a2b60c0d2e9d04c829f23b6bda6734, type: 2}
+    _recipeImage: {fileID: 2100000, guid: 710c4a1046b89d3418a0e44b392c07ec, type: 2}
   _failedPotion: {fileID: 11400000, guid: 3d83ac0ea8ba1614e8f9eb8f120643b6, type: 2}

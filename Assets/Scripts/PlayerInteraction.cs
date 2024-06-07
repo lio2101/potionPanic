@@ -9,6 +9,7 @@ namespace LJ
         // --- Enums ------------------------------------------------------------------------------------------------------
 
         // --- Fields -----------------------------------------------------------------------------------------------------
+        private GameManager _gm;
         private PlayerInventory _inventory;
         private IInteractable _nearestInteractable;
 
@@ -17,12 +18,18 @@ namespace LJ
         // --- Unity Functions --------------------------------------------------------------------------------------------
         void Start()
         {
+            _gm = GameManager.Instance;
             _inventory = GetComponent<PlayerInventory>();
         }
 
         // --- Event callbacks --------------------------------------------------------------------------------------------
 
         // --- Public/Internal Methods ------------------------------------------------------------------------------------
+        public void OnPause(InputValue inputValue)
+        {
+            _gm.PauseRound();
+        }
+        
         public void OnInteract(InputValue inputValue)
         {
 
@@ -80,6 +87,13 @@ namespace LJ
                                 _inventory.RemovePotion();
                             }
                         }
+                        break;
+
+                    case RecipeBoardController recipeBoard:
+
+                        Debug.Log("recipeboard in reach");
+                        recipeBoard.ChangeRecipe();
+
                         break;
                 }
 

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace LJ
 {
@@ -13,6 +14,7 @@ namespace LJ
         // --- Fields -----------------------------------------------------------------------------------------------------
         [SerializeField] private SO_RecipeCollection _recipes;
         [SerializeField, Min(0f)] private float _cookingDuration = 2f;
+        [SerializeField] private Image[] _statusUI = new Image[3];
 
         private Stack<SO_HerbData> _herbs = new Stack<SO_HerbData>();
         private bool _isCooking;
@@ -23,7 +25,10 @@ namespace LJ
         public bool HasPotionReady => _currentPotion != null;
 
         // --- Unity Functions --------------------------------------------------------------------------------------------
-
+        void Start()
+        {
+            UpdateStatusUI();
+        }
         // --- Event callbacks --------------------------------------------------------------------------------------------
 
         // --- Public/Internal Methods ------------------------------------------------------------------------------------
@@ -38,13 +43,13 @@ namespace LJ
             {
                 _herbs.Push(data);
                 Debug.Log($"Added {data.Type} to Cauldron");
+                UpdateStatusUI();
 
                 if(_herbs.Count >= 3)
                 {
                     Debug.Log("Cauldron Inventory full");
                     StartCoroutine(MakePotionRoutine());
 
-                    _herbs.Clear();
                 }
             }
         }
@@ -58,6 +63,7 @@ namespace LJ
 
         IEnumerator MakePotionRoutine()
         {
+            UpdateStatusUI();
             _isCooking = true;
             _activeRecipe = _recipes.SearchRecipe(_herbs);
 
@@ -67,12 +73,29 @@ namespace LJ
             _currentPotion = Instantiate(_activeRecipe.PotionPrefab, transform, false);
             //_currentPotion.transform.localPosition = new Vector3(0f, 1f, 0f);
             Debug.Log($"Potion Prefab for {_activeRecipe.Type} Potion created");
+            _herbs.Clear();
+            UpdateStatusUI();
 
             _isCooking = false;
         }
 
         // --- Protected/Private Methods ----------------------------------------------------------------------------------
+        private void UpdateStatusUI()
+        {
+            int index = 0;
 
+            foreach(SO_HerbData item in _herbs)
+            {
+                _statusUI[index].enabled = true;
+                index++;
+            }
+
+            for(; index < _statusUI.Length; index++)
+            {
+                _statusUI[index].enabled = false;
+            }
+
+        }
         // --------------------------------------------------------------------------------------------
     }
 }

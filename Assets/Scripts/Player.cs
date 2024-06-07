@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace LJ
 {
-	public class Player
+	public class Player : MonoBehaviour
 	{
 		// --- Enums ------------------------------------------------------------------------------------------------------		
 

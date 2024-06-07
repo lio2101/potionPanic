@@ -18,7 +18,7 @@ namespace LJ
         private SO_PotionData _potionOrder;
         private bool _isEntering, _isWaiting, _isLeaving;
 
-        const int ORDER_TIME = 200;
+        const int ORDER_TIME = 30;
 
         // --- Properties -------------------------------------------------------------------------------------------------
         public bool IsEntering { get { return _isEntering; } set {  _isEntering = value; } }

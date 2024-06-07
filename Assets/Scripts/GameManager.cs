@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 namespace LJ
 {
@@ -12,14 +13,8 @@ namespace LJ
 
         // --- Fields -----------------------------------------------------------------------------------------------------
         private static GameManager _instance;
-        [SerializeField] private PlayerInputManager _playerManager;
 
-        [SerializeField] private List<Player> team1;
-        [SerializeField] private List<Player> team2;
-
-        public static bool isGameActive;
-
-
+        public const int ORDERS_PER_ROUND = 10;
 
         public static GameManager Instance
         {
@@ -38,57 +33,43 @@ namespace LJ
         private void Awake()
         {
             _instance = this;
-
         }
 
-        private void OnEnable()
+        private void Start()
         {
-            //subscribe
-            _playerManager.onPlayerJoined += OnPlayerJoined;
-            _playerManager.onPlayerLeft += OnPlayerJoined;
+            //SceneManager.LoadScene(0);
+            //StartCharacterSelection();
         }
-        private void OnDisable()
-        {
-            //unsubscribe    
-            _playerManager.onPlayerJoined -= OnPlayerJoined;
-            _playerManager.onPlayerLeft -= OnPlayerLeft;
-        }
-
-        private void OnPlayerJoined(PlayerInput obj)
-        {
-            Debug.Log("New Player");
-        }
-
-        private void OnPlayerLeft(PlayerInput obj)
-        {
-
-            Debug.Log("New Player");
-        }
-
-
-
 
         // --- Event callbacks --------------------------------------------------------------------------------------------
 
         // --- Public/Internal Methods ------------------------------------------------------------------------------------
+        public void StartCharacterSelection()
+        {
+            Debug.Log("Start Character Select");
+            
+        }
+
         public void StartRound()
         {
-
+            Debug.Log("Start Game");
+            SceneManager.LoadScene(1);
         }
 
         public void PauseRound()
         {
-
+            Debug.Log("Paused Game");
         }
 
         public void EndRound()
         {
+            Debug.Log("Game Over");
 
         }
 
         public void QuitGame()
         {
-
+            Application.Quit();
         }
         // --- Protected/Private Methods ----------------------------------------------------------------------------------
 
