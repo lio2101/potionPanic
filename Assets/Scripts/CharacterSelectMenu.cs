@@ -1,25 +1,41 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
-namespace LJ
+namespace LJ.UI
 {
-    public class FaceCamera : MonoBehaviour
+    public class CharacterSelectMenu : MonoBehaviour
     {
         // --- Enums ------------------------------------------------------------------------------------------------------
 
         // --- Fields -----------------------------------------------------------------------------------------------------
-        private Camera _camera;
+        
+
+        [SerializeField] private Sprite _colorTeam1;
+        [SerializeField] private Sprite _colorTeam2;
+
+        [SerializeField] private TeamManager _teamManager;
+        [SerializeField] private CharacterConfigurationUI[] _configurationUI;
 
         // --- Properties -------------------------------------------------------------------------------------------------
 
         // --- Unity Functions --------------------------------------------------------------------------------------------
         private void Awake()
         {
-            _camera = Camera.main;
+            _teamManager.PlayerJoined += OnPlayerJoined;
         }
 
-        private void LateUpdate()
+        private void OnDestroy()
         {
-            transform.forward = _camera.transform.forward;
+            _teamManager.PlayerJoined -= OnPlayerJoined;
+        }
+
+        private void OnPlayerJoined(Player player)
+        {
+            _configurationUI.FirstOrDefault(c => c.LinkedPlayer == null).LinkToPlayer(player);
         }
 
         // --- Event callbacks --------------------------------------------------------------------------------------------
@@ -27,6 +43,11 @@ namespace LJ
         // --- Public/Internal Methods ------------------------------------------------------------------------------------
 
         // --- Protected/Private Methods ----------------------------------------------------------------------------------
+        private void UpdateUI(int teamIndex, int playerIndex)
+        {
+            //_teamManager.Teams[teamIndex].Players[playerIndex].
+        }
+
 
         // --------------------------------------------------------------------------------------------
     }

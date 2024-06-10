@@ -1,11 +1,7 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditorInternal.VersionControl;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
 
 namespace LJ
 {
@@ -19,7 +15,6 @@ namespace LJ
         [SerializeField] private Image _potionSlot;
 
         private Stack<SO_HerbData> _herbs = new Stack<SO_HerbData>();
-        private Canvas _canvas;
 
         private SO_PotionData _potion;
 
@@ -29,16 +24,16 @@ namespace LJ
 
         public bool HasHerbs => _herbs.Count > 0;
         public bool HasPotion => _potion != null;
-        public bool CanRecieveHerb => _herbs.Count < 3 && _potion == null;
-        public bool CanRecievePotion => _herbs.Count == 0 && _potion == null;
+        public bool CanReceiveHerb => _herbs.Count < 3 && _potion == null;
         public bool IsInventoryEmpty => _herbs.Count == 0 && _potion == null;
+        public bool CanReceivePotion => IsInventoryEmpty;
 
         // --- Unity Functions --------------------------------------------------------------------------------------------
         private void Start()
         {
-            _canvas = GetComponentInChildren<Canvas>();
-            _canvas.enabled = false;
+            UpdateInventoryUI();
         }
+
         // --- Event callbacks --------------------------------------------------------------------------------------------
 
         // --- Public/Internal Methods ------------------------------------------------------------------------------------
@@ -75,26 +70,28 @@ namespace LJ
         private void UpdateInventoryUI()
         {
             int index = 0;
-            _canvas.enabled = true;
-            foreach(SO_HerbData item in _herbs)
-            {
-                _inventorySlots[index].enabled = true;
-                _inventorySlots[index].sprite = item.Icon;
-                index++;
-            }
             if(_potion != null)
             {
                 _potionSlot.enabled = true;
                 _potionSlot.sprite = _potion.Icon;
-                index++;
             }
-            else { _potionSlot.enabled = false; }
+            else
+            {
+                _potionSlot.enabled = false;
 
+                foreach(SO_HerbData item in _herbs.Reverse())
+                {
+                    _inventorySlots[index].enabled = true;
+                    _inventorySlots[index].sprite = item.Icon;
+                    index++;
+                }
+            }
+
+            // Disable free potion slots
             for(; index < _inventorySlots.Length; index++)
             {
                 _inventorySlots[index].enabled = false;
             }
-
         }
 
         // --------------------------------------------------------------------------------------------

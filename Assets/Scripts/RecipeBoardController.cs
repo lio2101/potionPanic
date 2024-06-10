@@ -1,3 +1,4 @@
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -24,7 +25,6 @@ namespace LJ
         {
             _recipeBoard = _recipeBoard.GetComponent<Renderer>();
             _recipeBoard.material = _recipeCollection.Recipes[0].RecipeImage;
-
         }
 
         // --- Event callbacks --------------------------------------------------------------------------------------------

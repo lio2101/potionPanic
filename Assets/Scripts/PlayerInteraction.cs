@@ -11,6 +11,7 @@ namespace LJ
         // --- Fields -----------------------------------------------------------------------------------------------------
         private GameManager _gm;
         private PlayerInventory _inventory;
+
         private IInteractable _nearestInteractable;
 
         // --- Properties -------------------------------------------------------------------------------------------------
@@ -41,14 +42,14 @@ namespace LJ
                         switch(item.Item)
                         {
                             case SO_HerbData herb:
-                                if(_inventory.CanRecieveHerb)
+                                if(_inventory.CanReceiveHerb)
                                 {
                                     _inventory.AddHerb(herb);
                                 }
                                 break;
 
                             case SO_PotionData potion:
-                                if(_inventory.CanRecievePotion)
+                                if(_inventory.CanReceivePotion)
                                 {
                                     _inventory.AddPotion(potion);
                                 }
@@ -62,7 +63,7 @@ namespace LJ
                             cauldron.AddHerb(_inventory.Herbs.Peek());
                             _inventory.RemoveHerb();
                         }
-                        else if(_inventory.CanRecievePotion && cauldron.HasPotionReady)
+                        else if(_inventory.CanReceivePotion && cauldron.HasPotionReady)
                         {
                             _inventory.AddPotion(cauldron.PassPotion());
                         }

@@ -27,13 +27,15 @@ namespace LJ
         // --- Enums ------------------------------------------------------------------------------------------------------
 
         // --- Fields -----------------------------------------------------------------------------------------------------
-        [SerializeField] private GameObject[] _playerPrefabs;
         [SerializeField] private Transform[] _spawnPositions;
         [SerializeField] private PlayerInputManager _playerInputManager;
 
         [SerializeField] private List<Team> _teams;
 
         private const int MAX_TEAM_AMOUNT = 2;
+
+        public delegate void PlayerJoinedEvent(Player player);
+        public event PlayerJoinedEvent PlayerJoined;
 
         // --- Properties -------------------------------------------------------------------------------------------------
         public List<Team> Teams { get { return _teams; } }
@@ -57,12 +59,18 @@ namespace LJ
         {
             //unsubscribe    
             _playerInputManager.onPlayerJoined -= OnPlayerJoined;
-            _playerInputManager.onPlayerLeft -= OnPlayerLeft;
+            _playerInputManager.onPlayerLeft -= OnPlayerLeft;            
         }
 
         private void OnPlayerJoined(PlayerInput playerInput)
         {
-            Player player = playerInput.transform.GetComponent<Player>();
+            Player player = playerInput.GetComponent<Player>();
+
+            player.ReadyStatusChanged += OnPlayerReadyChanged;
+
+
+            playerInput.SwitchCurrentActionMap("CharacterSelect");
+
             Team nextAvailableTeam = _teams.FirstOrDefault(t => t.IsFull == false);
 
             if(nextAvailableTeam == null)
@@ -85,19 +93,31 @@ namespace LJ
             Debug.Log(player != null);
             nextAvailableTeam.AddPlayer(player);
 
+            //CharacterController controller = player.GetComponent<CharacterController>();
+            //controller.enabled = false;
             player.transform.position = _spawnPositions[CurrentPlayerCount - 1].position;
-            _playerInputManager.playerPrefab = _playerPrefabs[CurrentPlayerCount];
+            Physics.SyncTransforms();
 
+            Debug.Log("SpawnPosition: " + _spawnPositions[CurrentPlayerCount - 1].position);
+            Debug.Log("PlayerPosition:" + player.gameObject.transform.position);
             Debug.Log("New Player");
-        }
 
-        private void OnPlayerLeft(PlayerInput obj)
+            PlayerJoined?.Invoke(player);
+        }        
+
+        private void OnPlayerLeft(PlayerInput playerInput)
         {
 
             Debug.Log("New Player");
         }
 
+
+
         // --- Event callbacks --------------------------------------------------------------------------------------------
+        private void OnPlayerReadyChanged(Player player, bool isReady)
+        {
+
+        }
 
         // --- Public/Internal Methods ------------------------------------------------------------------------------------
         public void EnableMovement()
@@ -110,10 +130,6 @@ namespace LJ
 
         }
 
-        public void ChangeTeam()
-        {
-
-        }
         // --- Protected/Private Methods ----------------------------------------------------------------------------------
 
         // --------------------------------------------------------------------------------------------

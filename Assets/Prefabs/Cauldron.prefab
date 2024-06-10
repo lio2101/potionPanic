@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3209285949761672068}
   - component: {fileID: 4947029360148530442}
   - component: {fileID: 8689712650965147001}
-  - component: {fileID: 5702114616895753075}
+  - component: {fileID: 8761692451899992450}
   m_Layer: 0
   m_Name: Cauldron
   m_TagString: Untagged
@@ -84,8 +84,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &5702114616895753075
-CapsuleCollider:
+--- !u!64 &8761692451899992450
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -102,11 +102,10 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5000001
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &3107308862446590208
 GameObject:
   m_ObjectHideFlags: 0
@@ -309,7 +308,7 @@ GameObject:
   m_Component:
   - component: {fileID: 359699626601835043}
   - component: {fileID: 2188436463907855175}
-  - component: {fileID: 5957123804916123279}
+  - component: {fileID: 6115131190143170719}
   m_Layer: 0
   m_Name: Cauldron
   m_TagString: Untagged
@@ -352,8 +351,8 @@ MonoBehaviour:
   - {fileID: 1389923343684685789}
   - {fileID: 1116854078352597242}
   - {fileID: 3477525319045213114}
---- !u!65 &5957123804916123279
-BoxCollider:
+--- !u!135 &6115131190143170719
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -371,7 +370,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 3, y: 2, z: 3}
+  m_Radius: 1.2
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5999363083089645386
 GameObject:
