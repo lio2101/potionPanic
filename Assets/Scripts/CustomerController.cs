@@ -89,11 +89,11 @@ namespace LJ
                 void OnSpawnReached()
                 {
                     Destroy(customer.gameObject);
-                    //if(data.count < ORDERS_PER_ROUND)
-                    //{
-                    //    data.CreateCustomer(_customerPrefabs.GetRandomElement());
-                    //    Debug.Log("Created new customer");
-                    //}
+                    if(data.count < GameManager.ORDERS_PER_ROUND)
+                    {
+                        data.CreateCustomer(_customerPrefabs.GetRandomElement());
+                        Debug.Log("Created new customer");
+                    }
                 }
             }
 

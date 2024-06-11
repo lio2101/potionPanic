@@ -680,7 +680,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Actions: {fileID: -944628639613478452, guid: 8452ecae60dea5e4697d959d8756f638,
     type: 3}
-  m_NotificationBehavior: 0
+  m_NotificationBehavior: 3
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
     m_PersistentCalls:
@@ -730,6 +730,13 @@ MonoBehaviour:
   - {fileID: 2942082498285692212}
   - {fileID: 373457979536960965}
   - {fileID: 3217912941500557473}
+  _switchTeamReference: {fileID: 6006974405040951684, guid: 8452ecae60dea5e4697d959d8756f638,
+    type: 3}
+  _changeAppearanceReference: {fileID: 3598285013428842511, guid: 8452ecae60dea5e4697d959d8756f638,
+    type: 3}
+  _readyReference: {fileID: -8813578018265950118, guid: 8452ecae60dea5e4697d959d8756f638,
+    type: 3}
+  _playerInput: {fileID: 2453635283363721754}
 --- !u!1001 &594307153372978579
 PrefabInstance:
   m_ObjectHideFlags: 0

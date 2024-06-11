@@ -30,6 +30,10 @@ namespace LJ
 
         private void Update()
         {
+            if (_camera == null)
+            {
+                _camera = Camera.main;
+            }
             Vector3 movement = new Vector3(_movementInput.x, 0f, _movementInput.y);
             Quaternion camRotation = Quaternion.Euler(0f, _camera.transform.eulerAngles.y, 0f);
             movement = camRotation * movement;
@@ -53,7 +57,7 @@ namespace LJ
         // --- Public/Internal Methods ------------------------------------------------------------------------------------
         public void OnMovement(InputValue inputValue)
         {
-            //Debug.Log($"On movement: {inputValue.Get<Vector2>()}");
+            Debug.Log($"On movement: {inputValue.Get<Vector2>()}");
             _movementInput = inputValue.Get<Vector2>();
         }
 

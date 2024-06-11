@@ -363,8 +363,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e468486849d2ae74a8fa9deeb66b021f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _colorTeam1: {fileID: 21300000, guid: ffa09d000f4a05e4cac38ad697118923, type: 3}
-  _colorTeam2: {fileID: 21300000, guid: 017658f720a1be943a2eecf4167ba9f7, type: 3}
   _teamManager: {fileID: 163704456}
   _configurationUI:
   - {fileID: 1956486750}

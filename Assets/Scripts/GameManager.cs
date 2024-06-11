@@ -16,9 +16,12 @@ namespace LJ
 
         public const int ORDERS_PER_ROUND = 10;
 
-        private bool _characterSelectionIsActive;
         public delegate void CharacterSelectionActiveEvent(string actionMapName);
         public event CharacterSelectionActiveEvent CharacterSelectionActive;
+
+        public delegate void GameActiveEvent(string actionMapName);
+        public event GameActiveEvent GameActive;
+
 
         public static GameManager Instance
         {
@@ -37,11 +40,11 @@ namespace LJ
         private void Awake()
         {
             _instance = this;
+            DontDestroyOnLoad(this);
         }
 
         private void Start()
         {
-            //SceneManager.LoadScene(0);
             StartCharacterSelection();
         }
 
@@ -51,15 +54,15 @@ namespace LJ
         public void StartCharacterSelection()
         {
             Debug.Log("Start Character Select");
-            _characterSelectionIsActive = true;
-            CharacterSelectionActive?.Invoke("CharacterSelect");
+            GameActive?.Invoke("CharacterSelect");
         }
 
         public void StartRound()
         {
             Debug.Log("Start Game");
-            _characterSelectionIsActive = false;
             SceneManager.LoadScene(1);
+            CharacterSelectionActive?.Invoke("GameControls");
+            //transform player objects
         }
 
         public void PauseRound()

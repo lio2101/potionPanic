@@ -19,6 +19,11 @@ namespace LJ
 
         private void LateUpdate()
         {
+            if(_camera == null)
+            {
+                _camera = Camera.main;
+            }
+
             transform.forward = _camera.transform.forward;
         }
 

@@ -12,11 +12,6 @@ namespace LJ.UI
         // --- Enums ------------------------------------------------------------------------------------------------------
 
         // --- Fields -----------------------------------------------------------------------------------------------------
-        
-
-        [SerializeField] private Sprite _colorTeam1;
-        [SerializeField] private Sprite _colorTeam2;
-
         [SerializeField] private TeamManager _teamManager;
         [SerializeField] private CharacterConfigurationUI[] _configurationUI;
 
@@ -35,18 +30,25 @@ namespace LJ.UI
 
         private void OnPlayerJoined(Player player)
         {
+            player.ReadyStatusChanged += OnReadyStatusChanged;
             _configurationUI.FirstOrDefault(c => c.LinkedPlayer == null).LinkToPlayer(player);
         }
 
+
         // --- Event callbacks --------------------------------------------------------------------------------------------
+        private void OnReadyStatusChanged(Player player, bool isReady)
+        {
+            if(_configurationUI.Count(c => c.LinkedPlayer != null && c.LinkedPlayer.IsReady) == _teamManager.CurrentPlayerCount)
+            {
+                Debug.Log("All Players Ready!");
+                _teamManager.Approve();
+            }
+            else { Debug.Log("Not all players ready");  }
+        }
 
         // --- Public/Internal Methods ------------------------------------------------------------------------------------
 
         // --- Protected/Private Methods ----------------------------------------------------------------------------------
-        private void UpdateUI(int teamIndex, int playerIndex)
-        {
-            //_teamManager.Teams[teamIndex].Players[playerIndex].
-        }
 
 
         // --------------------------------------------------------------------------------------------

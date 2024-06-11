@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -13,12 +14,22 @@ namespace LJ
         [SerializeField] private List<Player> _players = new();
 
         public List<Player> Players { get { return _players; } }
-        public bool IsFull => _players.Count == 2;
+        //public bool IsFull => _players.Count == 2;
         public int PlayerCount => _players.Count;
 
         public void AddPlayer(Player player)
         {
             _players.Add(player);
+        }
+
+        public void RemovePlayer(Player player)
+        {
+            _players.Remove(player);
+        }
+
+        public Player FindPlayer(Player player)
+        {
+            return _players.FirstOrDefault(p => p == player);
         }
     }
 
@@ -37,16 +48,19 @@ namespace LJ
         public delegate void PlayerJoinedEvent(Player player);
         public event PlayerJoinedEvent PlayerJoined;
 
+        private GameManager _gm;
+
         // --- Properties -------------------------------------------------------------------------------------------------
         public List<Team> Teams { get { return _teams; } }
 
-        private int CurrentPlayerCount => _teams.Sum(t => t.PlayerCount);
-        private bool AllTeamsFull => _teams.All(t => t.IsFull);
+        public int CurrentPlayerCount => _teams.Sum(t => t.PlayerCount);
+        //private bool AllTeamsFull => _teams.All(t => t.IsFull);
 
         // --- Unity Functions --------------------------------------------------------------------------------------------
         private void Start()
         {
-
+            _gm = GameManager.Instance;
+            DontDestroyOnLoad(this);
         }
 
         private void OnEnable()
@@ -57,9 +71,9 @@ namespace LJ
         }
         private void OnDisable()
         {
-            //unsubscribe    
+            //unsubscribe
             _playerInputManager.onPlayerJoined -= OnPlayerJoined;
-            _playerInputManager.onPlayerLeft -= OnPlayerLeft;            
+            _playerInputManager.onPlayerLeft -= OnPlayerLeft;
         }
 
         private void OnPlayerJoined(PlayerInput playerInput)
@@ -67,48 +81,69 @@ namespace LJ
             Player player = playerInput.GetComponent<Player>();
 
             player.ReadyStatusChanged += OnPlayerReadyChanged;
-
+            player.TeamSwitched += OnTeamSwitched;
 
             playerInput.SwitchCurrentActionMap("CharacterSelect");
+            playerInput.DeactivateInput();
+            StartCoroutine(SwitchRoutine());
 
-            Team nextAvailableTeam = _teams.FirstOrDefault(t => t.IsFull == false);
+            IEnumerator SwitchRoutine()
+            {
+                yield return null;
+                playerInput.ActivateInput();
+            }
 
-            if(nextAvailableTeam == null)
+            if(_teams.Count < MAX_TEAM_AMOUNT)
+            {
+                Team team = new();
+                _teams.Add(team);
+            }
+            _teams[0].AddPlayer(player);
+
+            player.transform.position = _spawnPositions[CurrentPlayerCount - 1].position;
+            Physics.SyncTransforms();
+            DontDestroyOnLoad(player);
+
+            Debug.Log("New Player");
+            Debug.Log($"Currently {CurrentPlayerCount} players");
+            Debug.Log($"Currently {_teams[0].PlayerCount} players in Team 1");
+
+            PlayerJoined?.Invoke(player);
+        }
+
+        private void OnTeamSwitched(Player player, int teamIndex)
+        {
+
+            if(CurrentPlayerCount > 1)
             {
                 if(_teams.Count < MAX_TEAM_AMOUNT)
                 {
                     Team team = new();
                     _teams.Add(team);
-                    nextAvailableTeam = team;
                 }
-                else
+                if(teamIndex == 0)
                 {
-                    Debug.LogWarning("All teams are full!");
-                    Destroy(playerInput.gameObject);
-                    return;
+                    _teams[0].Players.Remove(player);
+                    _teams[1].Players.Add(player);
+                    Debug.Log($"Moved Player from team 1 to team 2");
                 }
+                else if(teamIndex == 1)
+                {
+                    _teams[1].Players.Remove(player);
+                    _teams[0].Players.Add(player);
+                    Debug.Log($"Moved Player from team 2 to team 1");
+                }
+                Debug.Log($"Currently {_teams[0].PlayerCount} players in Team 1");
+                Debug.Log($"Currently {_teams[1].PlayerCount} players in Team 2");
             }
-
-            Debug.Log(nextAvailableTeam != null);
-            Debug.Log(player != null);
-            nextAvailableTeam.AddPlayer(player);
-
-            //CharacterController controller = player.GetComponent<CharacterController>();
-            //controller.enabled = false;
-            player.transform.position = _spawnPositions[CurrentPlayerCount - 1].position;
-            Physics.SyncTransforms();
-
-            Debug.Log("SpawnPosition: " + _spawnPositions[CurrentPlayerCount - 1].position);
-            Debug.Log("PlayerPosition:" + player.gameObject.transform.position);
-            Debug.Log("New Player");
-
-            PlayerJoined?.Invoke(player);
-        }        
+            else { Debug.Log($"need more than {CurrentPlayerCount} players to change team"); }
+        }
 
         private void OnPlayerLeft(PlayerInput playerInput)
         {
-
-            Debug.Log("New Player");
+            Player player = playerInput.GetComponent<Player>();
+            player.ReadyStatusChanged -= OnPlayerReadyChanged;
+            player.TeamSwitched -= OnTeamSwitched;
         }
 
 
@@ -120,14 +155,37 @@ namespace LJ
         }
 
         // --- Public/Internal Methods ------------------------------------------------------------------------------------
-        public void EnableMovement()
+        public void Approve()
         {
-            //foreach
-        }
+            if(CurrentPlayerCount == 2 || CurrentPlayerCount == 4)
+            {
+                Debug.Log("Valid player amount");
+                if(_teams.Count(t => t.PlayerCount == 1) == 2)
+                {
+                    Debug.Log("1 v 1 Starting");
 
-        public void DisableMovement()
-        {
+                    StartCoroutine(CountDownRoutine());
 
+                }
+                else if(_teams.Count(t => t.PlayerCount == 2) == 2)
+                {
+                    Debug.Log("2 v 2 Starting");
+
+                    StartCoroutine(CountDownRoutine());
+
+                }
+                else { Debug.Log("Invalid team sizes"); }
+            }
+            else
+            {
+                Debug.Log("Invalid player amount. Please play with 2 or 4 players");
+            }
+
+            IEnumerator CountDownRoutine()
+            {
+                yield return new WaitForSeconds(3);
+                _gm.StartRound();
+            }
         }
 
         // --- Protected/Private Methods ----------------------------------------------------------------------------------

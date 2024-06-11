@@ -2,7 +2,7 @@
     "name": "Controlls",
     "maps": [
         {
-            "name": "Player",
+            "name": "GameControls",
             "id": "8ed8e4f6-f32c-44e6-888f-b1b1db569094",
             "actions": [
                 {
@@ -152,12 +152,12 @@
             "actions": [
                 {
                     "name": "SwitchTeam",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "00f5298a-0598-4619-848d-b34e1759f183",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "Analog",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "ChangeAppearance",
@@ -282,15 +282,15 @@
                     "name": "1D Axis",
                     "id": "050de5f5-df7a-4305-9863-018fdac8e104",
                     "path": "1DAxis",
-                    "interactions": "",
-                    "processors": "",
+                    "interactions": "Press",
+                    "processors": "AxisDeadzone,Normalize(min=-1,max=1)",
                     "groups": "",
                     "action": "SwitchTeam",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "negative",
+                    "name": "Negative",
                     "id": "e90a5179-e12c-4150-9947-567c91977636",
                     "path": "<Gamepad>/leftStick/left",
                     "interactions": "",
@@ -301,7 +301,7 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "positive",
+                    "name": "Positive",
                     "id": "83fc8fd5-9e5b-4943-8603-b118ed00f372",
                     "path": "<Gamepad>/leftStick/right",
                     "interactions": "",
@@ -414,7 +414,7 @@
                     "name": "1D Axis",
                     "id": "9ab4fa74-05c0-4091-981e-eaeeb95e8d7f",
                     "path": "1DAxis",
-                    "interactions": "",
+                    "interactions": "Press",
                     "processors": "AxisDeadzone,Normalize(min=-1,max=1)",
                     "groups": "",
                     "action": "ChangeAppearance",

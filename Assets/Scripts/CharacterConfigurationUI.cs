@@ -7,24 +7,21 @@ using UnityEngine.UI;
 
 namespace LJ
 {
-	public class CharacterConfigurationUI : MonoBehaviour
-	{
-		// --- Enums ------------------------------------------------------------------------------------------------------
+    public class CharacterConfigurationUI : MonoBehaviour
+    {
+        // --- Enums ------------------------------------------------------------------------------------------------------
 
-		// --- Fields -----------------------------------------------------------------------------------------------------
-		private Image _readyImage;
-		private Image _teamColorImage;
+        // --- Fields -----------------------------------------------------------------------------------------------------
+        [SerializeField] private Image _readyImage;
+        [SerializeField] private Image _teamColorImage;
 
         // --- Properties -------------------------------------------------------------------------------------------------
-		public Player LinkedPlayer { get; private set; }
+        public Player LinkedPlayer { get; private set; }
 
         // --- Unity Functions --------------------------------------------------------------------------------------------
         private void Start()
         {
-            _readyImage = GetComponentInChildren<Image>();
-			_teamColorImage = GetComponentInChildren<Image>();
-
-            //player.TeamSwitched += ChangeTeamColor;
+            _teamColorImage.color = Color.red;
         }
 
         private void OnDestroy()
@@ -39,39 +36,38 @@ namespace LJ
         // --- Event callbacks --------------------------------------------------------------------------------------------
         private void OnReadyStatusChanged(Player player, bool isReady)
         {
-            throw new NotImplementedException();
+            if(isReady)
+            {
+                _readyImage.color = Color.green;
+
+            }
+            else
+            {
+                _readyImage.color = Color.grey;
+            }
         }
 
         private void OnTeamSwitched(Player player, int teamIndex)
         {
-            if(teamIndex == 0)
+            _teamColorImage.color = teamIndex switch
             {
-                _readyImage.color = Color.red;
-            }
-            else if(teamIndex == 1)
-            {
-                _readyImage.color = Color.blue;
-            }
-
-            _readyImage.color = teamIndex switch
-            {
-                0 => Color.red,
-                1 => Color.blue,
+                0 => Color.blue,
+                1 => Color.red,
                 _ => Color.white
             };
         }
 
         // --- Public/Internal Methods ------------------------------------------------------------------------------------
         public void LinkToPlayer(Player player)
-		{
-			LinkedPlayer = player;
+        {
+            LinkedPlayer = player;
 
-			LinkedPlayer.TeamSwitched += OnTeamSwitched;
+            LinkedPlayer.TeamSwitched += OnTeamSwitched;
             LinkedPlayer.ReadyStatusChanged += OnReadyStatusChanged;
-        }        
+        }
 
         // --- Protected/Private Methods ----------------------------------------------------------------------------------
-        
-		// --------------------------------------------------------------------------------------------
-	}
+
+        // --------------------------------------------------------------------------------------------
+    }
 }
