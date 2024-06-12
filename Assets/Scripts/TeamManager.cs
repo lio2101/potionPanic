@@ -39,6 +39,7 @@ namespace LJ
 
         // --- Fields -----------------------------------------------------------------------------------------------------
         [SerializeField] private Transform[] _spawnPositions;
+        [SerializeField] private Transform[] _gameSpawnPositions;
         [SerializeField] private PlayerInputManager _playerInputManager;
 
         [SerializeField] private List<Team> _teams;
@@ -80,7 +81,12 @@ namespace LJ
         {
             Player player = playerInput.GetComponent<Player>();
 
-            player.ReadyStatusChanged += OnPlayerReadyChanged;
+            if(CurrentPlayerCount == 0)
+            {
+                player.IsPlayerOne = true;
+            }
+
+            //player.ReadyStatusChanged += OnPlayerReadyChanged;
             player.TeamSwitched += OnTeamSwitched;
 
             playerInput.SwitchCurrentActionMap("CharacterSelect");
@@ -142,17 +148,22 @@ namespace LJ
         private void OnPlayerLeft(PlayerInput playerInput)
         {
             Player player = playerInput.GetComponent<Player>();
-            player.ReadyStatusChanged -= OnPlayerReadyChanged;
+            //player.ReadyStatusChanged -= OnPlayerReadyChanged;
             player.TeamSwitched -= OnTeamSwitched;
+        }
+
+        private void OnPause(InputValue inputValue)
+        {
+            
         }
 
 
 
         // --- Event callbacks --------------------------------------------------------------------------------------------
-        private void OnPlayerReadyChanged(Player player, bool isReady)
-        {
+        //private void OnPlayerReadyChanged(Player player, bool isReady)
+        //{
 
-        }
+        //}
 
         // --- Public/Internal Methods ------------------------------------------------------------------------------------
         public void Approve()
@@ -185,6 +196,18 @@ namespace LJ
             {
                 yield return new WaitForSeconds(3);
                 _gm.StartRound();
+                int index = 0;
+                foreach(var team in _teams)
+                {
+                    foreach(var player in team.Players)
+                    {
+                        player.transform.position = _gameSpawnPositions[index].position;
+                        
+                        Physics.SyncTransforms();
+                        index++;
+                    }
+                }
+                Debug.Log("Moved all players to new spawn positions");
             }
         }
 

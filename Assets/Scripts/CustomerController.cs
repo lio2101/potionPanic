@@ -21,6 +21,7 @@ namespace LJ
             public Vector3 SpawnPos => _spawnPosition.position;
             public Vector3 TargetPos => _targetPosition.position;
 
+
             public void CreateCustomer(Customer prefab)
             {
                 customer = Instantiate(prefab, _spawnPosition.position, Quaternion.identity);

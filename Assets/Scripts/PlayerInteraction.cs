@@ -9,8 +9,13 @@ namespace LJ
         // --- Enums ------------------------------------------------------------------------------------------------------
 
         // --- Fields -----------------------------------------------------------------------------------------------------
+        [SerializeField] private PlayerInput _playerInput;
+        [SerializeField] private InputActionReference _interactReference;
+
         private GameManager _gm;
         private PlayerInventory _inventory;
+
+        private InputAction _interactAction;
 
         private IInteractable _nearestInteractable;
 
@@ -23,18 +28,25 @@ namespace LJ
             _inventory = GetComponent<PlayerInventory>();
         }
 
+        private void OnEnable()
+        {
+            _interactAction = _playerInput.actions.FindAction(_interactReference.action.id);
+            //_interactAction.performed += OnInteract;
+        }
+
+        private void OnDisable()
+        {
+            //_interactAction.performed -= OnInteract;
+        }
+
         // --- Event callbacks --------------------------------------------------------------------------------------------
 
         // --- Public/Internal Methods ------------------------------------------------------------------------------------
-        public void OnPause(InputValue inputValue)
-        {
-            _gm.PauseRound();
-        }
         
         public void OnInteract(InputValue inputValue)
         {
-
-            if(inputValue.isPressed && _nearestInteractable != null)
+            Debug.Log("OnInteract");
+            if(_nearestInteractable != null)
             {
                 switch(_nearestInteractable)
                 {

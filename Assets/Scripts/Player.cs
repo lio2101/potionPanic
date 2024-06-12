@@ -26,6 +26,12 @@ namespace LJ
         private int _modelIndex = 0;
         private int _teamIndex = 0;
 
+        private InputAction _switchTeamAction;
+        private InputAction _changeAppearanceAction;
+        private InputAction _readyAction;
+
+        private bool _isPlayerOne = false;
+
         //Delegates
         public delegate void ReadyStatusChangedEvent(Player player, bool isReady);
         public event ReadyStatusChangedEvent ReadyStatusChanged;
@@ -33,27 +39,27 @@ namespace LJ
         public delegate void TeamSwitchedEvent(Player player, int teamIndex);
         public event TeamSwitchedEvent TeamSwitched;
 
-        private InputAction _switchTeamAction;
-        private InputAction _changeAppearanceAction;
-        private InputAction _readyAction;
+        public delegate void GamePausedEvent();
+        public event GamePausedEvent GamePaused;
+
 
         // --- Properties -------------------------------------------------------------------------------------------------
         public bool IsReady => _isReady;
+        public bool IsPlayerOne {  get { return _isPlayerOne; } set { _isPlayerOne = value; } }
 
         // --- Unity Functions -----------------------------------------------------------------------------------------------
 
         private void OnEnable()
         {
-
             _switchTeamAction = _playerInput.actions.FindAction(_switchTeamReference.action.id);
 
             _changeAppearanceAction = _playerInput.actions.FindAction(_changeAppearanceReference.action.id);
 
             _readyAction = _playerInput.actions.FindAction(_readyReference.action.id);
 
-            _switchTeamAction.performed += OnSwitchTeam;
-            _changeAppearanceAction.performed += OnChangeAppearance;
-            _readyAction.performed += OnReady;
+            //_switchTeamAction.performed += OnSwitchTeam;
+            //_changeAppearanceAction.performed += OnChangeAppearance;
+            //_readyAction.performed += OnReady;
         }
 
         private void Start()
@@ -68,9 +74,9 @@ namespace LJ
         // --- Event callbacks --------------------------------------------------------------------------------------------
 
         // --- Public/Internal Methods ------------------------------------------------------------------------------------
-        public void OnSwitchTeam(InputAction.CallbackContext context)
+        public void OnSwitchTeam(InputValue inputValue)
         {
-            float value = context.ReadValue<float>();
+            float value = inputValue.Get<float>();
             Debug.Log(value);
 
             TeamSwitched.Invoke(this, _teamIndex);
@@ -79,9 +85,9 @@ namespace LJ
             else if(_teamIndex == 1) { _teamIndex = 0; }
         }
 
-        public void OnChangeAppearance(InputAction.CallbackContext context)
+        public void OnChangeAppearance(InputValue inputValue)
         {
-            float input = context.ReadValue<float>();
+            float input = inputValue.Get<float>();
 
             input = input > 0 ? Mathf.CeilToInt(input) : Mathf.FloorToInt(input);
             Debug.Log(input);
@@ -103,10 +109,10 @@ namespace LJ
             _characterModels[_modelIndex].SetActive(true);
         }
 
-        public void OnReady(InputAction.CallbackContext context)
+        public void OnReady(InputValue inputValue)
         {
             Debug.Log("OnReady");
-            if(context.ReadValueAsButton())
+            if(inputValue.isPressed)
             {
                 Debug.Log("Ready or Not");
                 _isReady = !_isReady;
@@ -127,11 +133,30 @@ namespace LJ
             }
         }
 
-        // --- Protected/Private Methods ----------------------------------------------------------------------------------
-        private void ChangeActionMap(string newActionMap)
+        public void OnPause(InputValue inputValue)
         {
-            Debug.Log("Changed action map to " + newActionMap);
-            _playerInput.SwitchCurrentActionMap(newActionMap);
+            if(inputValue.isPressed)
+            {
+                if(this.IsPlayerOne)
+                {
+                    _gm.PauseRound();
+                    ChangeActionMap();
+                }
+            }
+        }
+
+        // --- Protected/Private Methods ----------------------------------------------------------------------------------
+        private void ChangeActionMap()
+        {
+            if(GameManager.IS_GAME_ACTIVE)
+            {
+                _playerInput.SwitchCurrentActionMap("GameControls");
+            }
+            else
+            {
+                Debug.Log("UI Controls");
+                _playerInput.SwitchCurrentActionMap("UI");
+            }
         }
 
         // --------------------------------------------------------------------------------------------

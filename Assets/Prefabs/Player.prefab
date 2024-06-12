@@ -611,6 +611,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _maxSpeed: 5
+  _playerInput: {fileID: 2453635283363721754}
 --- !u!114 &3222101675745391109
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -623,6 +624,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c1ed6f7a42ca964f8bee75735fb6ac4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _playerInput: {fileID: 2453635283363721754}
+  _interactReference: {fileID: 4258155008049312594, guid: 8452ecae60dea5e4697d959d8756f638,
+    type: 3}
 --- !u!114 &3623394989585339099
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -680,7 +684,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Actions: {fileID: -944628639613478452, guid: 8452ecae60dea5e4697d959d8756f638,
     type: 3}
-  m_NotificationBehavior: 3
+  m_NotificationBehavior: 0
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
     m_PersistentCalls:
@@ -694,7 +698,7 @@ MonoBehaviour:
   m_ActionEvents:
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 8408607008890818713}
         m_TargetAssemblyTypeName: 
         m_MethodName: 
         m_Mode: 1
@@ -708,9 +712,41 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: c3d11c2c-ae16-42be-a707-e8277b8bf604
     m_ActionName: Player/Movement[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
-  m_NeverAutoSwitchControlSchemes: 0
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 96eb1b60-11b3-4f5c-8ce0-189f5fcb7ebf
+    m_ActionName: GameControls/Interact[/Keyboard/e,/DualShock4GamepadHID/buttonSouth]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: e6bf909e-db39-4f95-a450-468415717464
+    m_ActionName: GameControls/Pause[/Keyboard/escape,/DualShock4GamepadHID/touchpadButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 00f5298a-0598-4619-848d-b34e1759f183
+    m_ActionName: CharacterSelect/SwitchTeam[/Keyboard/a,/Keyboard/d,/Keyboard/leftArrow,/Keyboard/rightArrow,/DualShock4GamepadHID/dpad/left,/DualShock4GamepadHID/dpad/right,/DualShock4GamepadHID/leftStick/left,/DualShock4GamepadHID/leftStick/right]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 383faaf8-d265-46c4-a327-58e88bab2cb7
+    m_ActionName: CharacterSelect/ChangeAppearance[/Keyboard/s,/Keyboard/w,/Keyboard/downArrow,/Keyboard/upArrow,/DualShock4GamepadHID/dpad/down,/DualShock4GamepadHID/dpad/up,/DualShock4GamepadHID/leftStick/down,/DualShock4GamepadHID/leftStick/up]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 7c945d10-7300-4700-8867-2acff98e3934
+    m_ActionName: CharacterSelect/Ready[/Keyboard/e,/DualShock4GamepadHID/buttonSouth]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 77030019-a846-4aca-bd66-ce3c1b9e4cf4
+    m_ActionName: UI/New action
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 59dc7db8-dcb1-44ba-9d3d-5795c5a1370b
+    m_ActionName: CharacterSelect/Return[/Keyboard/escape,/DualShock4GamepadHID/start]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 7853d8e2-77dd-4d89-bf85-f20fe3e6d400
+    m_ActionName: UI/Confirm[/Keyboard/e,/Keyboard/enter,/DualShock4GamepadHID/buttonSouth]
+  m_NeverAutoSwitchControlSchemes: 1
   m_DefaultControlScheme: 
-  m_DefaultActionMap: Player
+  m_DefaultActionMap: CharacterSelect
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
 --- !u!114 &2153110316990244014
