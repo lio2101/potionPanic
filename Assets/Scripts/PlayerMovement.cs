@@ -93,7 +93,7 @@ namespace LJ
         public void OnMovement(InputValue inputValue)
         {
             _movementInput = inputValue.Get<Vector2>();
-            Debug.Log($"On movement: {_movementInput}");
+            //Debug.Log($"On movement: {_movementInput}");
         }
         // --- Public/Internal Methods ------------------------------------------------------------------------------------
 

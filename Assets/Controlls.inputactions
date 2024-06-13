@@ -136,7 +136,7 @@
                 {
                     "name": "",
                     "id": "3783f251-a4ce-4b2c-a622-c92469bb4ac6",
-                    "path": "<DualShockGamepad>/touchpadButton",
+                    "path": "<Gamepad>/start",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",

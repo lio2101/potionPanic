@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -64,11 +65,17 @@ namespace LJ
 
         private void Start()
         {
+            ChangeActionMap();
             _gm = GameManager.Instance;
             _gm.CharacterSelectionActive += ChangeActionMap;
-            _gm.GameActive += ChangeActionMap;
-
-            //TeamSwitched.Invoke(this, _teamIndex);
+            _gm.RoundActive += ChangeActionMap;
+            _gm.RoundFinished += ChangeActionMap;
+        }
+        private void OnDestroy()
+        {
+            _gm.CharacterSelectionActive -= ChangeActionMap;
+            _gm.RoundActive -= ChangeActionMap;
+            _gm.RoundFinished -= ChangeActionMap;
         }
 
         // --- Event callbacks --------------------------------------------------------------------------------------------
@@ -148,11 +155,15 @@ namespace LJ
         // --- Protected/Private Methods ----------------------------------------------------------------------------------
         private void ChangeActionMap()
         {
-            if(GameManager.IS_GAME_ACTIVE)
+            if(GameManager.IS_CHARACTERSELECT)
+            {
+                _playerInput.SwitchCurrentActionMap("CharacterSelect");
+            }
+            else if(GameManager.IS_GAME_ACTIVE)
             {
                 _playerInput.SwitchCurrentActionMap("GameControls");
             }
-            else
+            else if (GameManager.IS_GAME_PAUSED)
             {
                 Debug.Log("UI Controls");
                 _playerInput.SwitchCurrentActionMap("UI");

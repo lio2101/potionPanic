@@ -6,53 +6,48 @@ using TMPro;
 
 namespace LJ
 {
-	public class GameMenu : MonoBehaviour
+    //[Serializable]
+    //public class Score
+    //{
+    //    [SerializeField] private TextMeshPro _scoreUI;
+    //    private int _scoreCount;
+
+    //    public TextMeshPro ScoreUI { get { return _scoreUI; } }
+    //    public int ScoreCount { get { return _scoreCount; } }
+    //}
+
+
+	public class ScoreUI : MonoBehaviour
 	{
 		// --- Enums ------------------------------------------------------------------------------------------------------
 
 		// --- Fields -----------------------------------------------------------------------------------------------------
-		[SerializeField] private GameObject _pauseCanvas;
-		[SerializeField] private GameObject _returnCanvas;
-        [SerializeField] private GameObject _finishCanvas;
+        [SerializeField] private TMP_Text[] _scoresUI = new TMP_Text[2];
+        [SerializeField] CustomerController _customerController;
 
-        [SerializeField] private TMP_Text _winnerText;
+        private int[] _scores = { 0, 0 };
 
-        private GameManager _gm;
         // --- Properties -------------------------------------------------------------------------------------------------
 
         // --- Unity Functions --------------------------------------------------------------------------------------------
-        private void Start()
+        private void OnEnable()
         {
-            _gm = GameManager.Instance;
-            _gm.RoundPaused += OnGamePaused;
-            _gm.RoundActive += OnGameActive;
-            _gm.RoundFinished += OnGameFinished;
+            _customerController.ScoreChanged += OnScoreChanged;
+
         }
 
 
         private void OnDisable()
         {
-            _gm.RoundPaused -= OnGamePaused;
-            _gm.RoundActive -= OnGameActive;
-            _gm.RoundFinished -= OnGameFinished;
+            _customerController.ScoreChanged -= OnScoreChanged;
         }
 
         // --- Event callbacks --------------------------------------------------------------------------------------------
-        private void OnGamePaused()
+        private void OnScoreChanged(int team)
         {
-            _pauseCanvas.SetActive(true);
-        }
-
-        private void OnGameActive()
-        {
-            _pauseCanvas.SetActive(false);
-        }
-
-        private void OnGameFinished()
-        {
-            //_finishCanvas.SetActive(true);
-            //_finishCanvas
-
+            Debug.Log("ScoreUI on score changed");
+            _scores[team]++;
+            _scoresUI[team].text = _scores[team].ToString();
         }
 
         // --- Public/Internal Methods ------------------------------------------------------------------------------------

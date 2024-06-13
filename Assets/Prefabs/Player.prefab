@@ -612,6 +612,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _maxSpeed: 5
   _playerInput: {fileID: 2453635283363721754}
+  _movementReference: {fileID: 0}
 --- !u!114 &3222101675745391109
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -640,9 +641,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _inventorySlots:
-  - {fileID: 606867628362568844}
-  - {fileID: 2782065921994699770}
   - {fileID: 1062111888242517725}
+  - {fileID: 2782065921994699770}
+  - {fileID: 606867628362568844}
   _potionSlot: {fileID: 7938436104291529752}
 --- !u!143 &3939276202852019359
 CharacterController:

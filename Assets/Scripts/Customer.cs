@@ -16,14 +16,18 @@ namespace LJ
         [SerializeField] private SO_RecipeCollection _potions;
 
         private SO_PotionData _potionOrder;
+        private int _team;
         private bool _isEntering, _isWaiting, _isLeaving;
 
-        const int ORDER_TIME = 30;
+        public delegate void ScoredEvent(int team);
+        public event ScoredEvent Scored;
 
         // --- Properties -------------------------------------------------------------------------------------------------
         public bool IsEntering { get { return _isEntering; } set {  _isEntering = value; } }
         public bool IsWaiting { get { return _isWaiting;} set { _isWaiting = value; } }
         public bool IsLeaving { get { return _isLeaving; } set { _isLeaving = value; } }
+
+        public int Team { get { return _team; } set { _team = value; } }
         // --- Unity Functions -----------------------------------------------------------------------------------------------
         void Start()
         {
@@ -52,6 +56,9 @@ namespace LJ
                 _isWaiting = false;
                 _isLeaving = true;
                 _canvas.enabled = false;
+
+                Scored?.Invoke(_team);
+
                 return true;
             }
 
@@ -69,7 +76,7 @@ namespace LJ
         {
             Debug.Log("StartTimer");
             _isWaiting = true;
-            yield return new WaitForSeconds(ORDER_TIME);
+            yield return new WaitForSeconds(GameManager.ORDER_TIME);
             _isWaiting = false;
             _isLeaving = true;
             _canvas.enabled = false;

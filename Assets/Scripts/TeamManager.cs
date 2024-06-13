@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -61,6 +62,7 @@ namespace LJ
         private void Start()
         {
             _gm = GameManager.Instance;
+            _gm.RoundFinished += OnRoundFinished;
             DontDestroyOnLoad(this);
         }
 
@@ -70,6 +72,8 @@ namespace LJ
             _playerInputManager.onPlayerJoined += OnPlayerJoined;
             _playerInputManager.onPlayerLeft += OnPlayerLeft;
         }
+
+
         private void OnDisable()
         {
             //unsubscribe
@@ -147,9 +151,9 @@ namespace LJ
 
         private void OnPlayerLeft(PlayerInput playerInput)
         {
-            Player player = playerInput.GetComponent<Player>();
+            //Player player = playerInput.GetComponent<Player>();
             //player.ReadyStatusChanged -= OnPlayerReadyChanged;
-            player.TeamSwitched -= OnTeamSwitched;
+            //player.TeamSwitched -= OnTeamSwitched;
         }
 
         private void OnPause(InputValue inputValue)
@@ -160,6 +164,20 @@ namespace LJ
 
 
         // --- Event callbacks --------------------------------------------------------------------------------------------
+        private void OnRoundFinished()
+        {
+            foreach(var team in _teams)
+            {
+                foreach (var player in team.Players)
+                {
+                    //team.Players.Remove(player);
+                    Destroy(player.gameObject);
+                }
+            }
+            Debug.Log("Destroyed all players");
+            Destroy(this.gameObject);
+        }
+
         //private void OnPlayerReadyChanged(Player player, bool isReady)
         //{
 
@@ -208,6 +226,7 @@ namespace LJ
                     }
                 }
                 Debug.Log("Moved all players to new spawn positions");
+                
             }
         }
 
