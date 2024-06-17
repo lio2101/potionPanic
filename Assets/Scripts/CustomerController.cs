@@ -24,10 +24,11 @@ namespace LJ
             public Vector3 TargetPos => _targetPosition.position;
 
 
-            public void CreateCustomer(Customer prefab, int team)
+            public void CreateCustomer(Customer prefab, Team team, CustomerController controller)
             {
                 customer = Instantiate(prefab, _spawnPosition.position, Quaternion.identity);
                 customer.Team = team;
+                customer.SetCustomerController(controller);
                 count++;
                 Debug.Log($"New customer team {team}");
             }
@@ -38,8 +39,11 @@ namespace LJ
 
         // --- Fields -----------------------------------------------------------------------------------------------------
         [SerializeField] private Customer[] _customerPrefabs;
-        [SerializeField] private CustomerData[] _customerDatas = new CustomerData[2];
+        [SerializeField] private CustomerData _customerDataTeam1;
+        [SerializeField] private CustomerData _customerDataTeam2;
         [SerializeField] private float _moveSpeed = 2;
+        [SerializeField] private GameMenu _gameMenu;
+        [SerializeField] TeamManager _teamManager;
 
         public delegate void ScoreChangedEvent(int team);
         public ScoreChangedEvent ScoreChanged;
@@ -51,39 +55,22 @@ namespace LJ
         // --- Unity Functions --------------------------------------------------------------------------------------------
         private void Start()
         {
+            _teamManager = TeamManager.Instance;
             _gameManager = GameManager.Instance;
-            int index = 0;
-            foreach(CustomerData customerData in _customerDatas)
-            {
-                customerData.CreateCustomer(_customerPrefabs.GetRandomElement(), index);
-                customerData.customer.Scored += OnScored;
-                index++;
-            }
-        }
 
-        private void OnDisable()
-        {
-            foreach(CustomerData customerData in _customerDatas)
+            foreach(Team team in _teamManager.Teams)
             {
-                customerData.customer.Scored -= OnScored;
+                CreateCustomer(team);
             }
-
         }
 
         void LateUpdate()
         {
-            foreach(CustomerData customerData in _customerDatas)
-            {
-                MoveCustomer(customerData);
-            };
+            MoveCustomer(_customerDataTeam1);
+            MoveCustomer(_customerDataTeam2);
         }
 
         // --- Event callbacks --------------------------------------------------------------------------------------------
-        private void OnScored(int index)
-        {
-            Debug.Log("CustomerController on scored");
-            ScoreChanged?.Invoke(index);
-        }
 
         // --- Public/Internal Methods ------------------------------------------------------------------------------------
         public Vector3 Move(Vector3 current, Vector3 target)
@@ -92,16 +79,24 @@ namespace LJ
         }
 
         // --- Protected/Private Methods ----------------------------------------------------------------------------------
+
+        private void CreateCustomer(Team team)
+        {
+            CustomerData data = team.Index == 0 ? _customerDataTeam1 : _customerDataTeam2;
+            data.CreateCustomer(_customerPrefabs.GetRandomElement(), team, this);
+        }
+
         private void MoveCustomer(CustomerData data)
         {
             Customer customer = data.customer;
+
 
             if(customer != null)
             {
                 if(customer.IsEntering)
                 {
                     MoveTowards(data.TargetPos, OnTargetReached);
-
+                    customer.transform.LookAt(data.SpawnPos);
                     void OnTargetReached()
                     {
                         customer.IsEntering = false;
@@ -111,20 +106,18 @@ namespace LJ
                 else if(customer.IsLeaving)
                 {
                     MoveTowards(data.SpawnPos, OnSpawnReached);
-
+                    customer.transform.LookAt(data.TargetPos);
                     void OnSpawnReached()
                     {
-                        int currentTeam = customer.Team;
-                        customer.Scored -= OnScored;
+                        Team currentTeam = customer.Team;
                         Destroy(customer.gameObject);
                         if(data.count < GameManager.ORDERS_PER_ROUND)
                         {
-                            data.CreateCustomer(_customerPrefabs.GetRandomElement(), currentTeam);
-                            data.customer.Scored += OnScored;
+                            data.CreateCustomer(_customerPrefabs.GetRandomElement(), currentTeam, this);
                         }
-                        else 
-                        { 
-                            _gameManager.EndRound();
+                        else
+                        {
+                            _gameMenu.ShowFinalScore(_teamManager.CalculateWinner());
                         }
                     }
                 }

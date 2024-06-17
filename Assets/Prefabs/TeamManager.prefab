@@ -227,7 +227,13 @@ MonoBehaviour:
   - {fileID: 9146264066550810626}
   - {fileID: 6322553906153293290}
   _playerInputManager: {fileID: 6803211148206579015}
-  _teams: []
+  _teams:
+  - _players: []
+    _teamScore: 0
+    _teamName: Red
+  - _players: []
+    _teamScore: 0
+    _teamName: Blue
 --- !u!1 &3527807570820649400
 GameObject:
   m_ObjectHideFlags: 0

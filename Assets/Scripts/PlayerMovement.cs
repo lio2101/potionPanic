@@ -64,7 +64,7 @@ namespace LJ
                 _camera = Camera.main;
             }
 
-            Vector3 movement = new Vector3(_movementInput.x, 0f, _movementInput.y);
+            Vector3 movement = new Vector3(_movementInput.x, 0f, _movementInput.y).normalized;
             Quaternion camRotation = Quaternion.Euler(0f, _camera.transform.eulerAngles.y, 0f);
             movement = camRotation * movement;
 

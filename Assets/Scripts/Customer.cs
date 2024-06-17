@@ -15,19 +15,17 @@ namespace LJ
         [SerializeField] private Canvas _canvas;
         [SerializeField] private SO_RecipeCollection _potions;
 
+        private CustomerController _controller;
         private SO_PotionData _potionOrder;
-        private int _team;
+        private Team _team;
         private bool _isEntering, _isWaiting, _isLeaving;
-
-        public delegate void ScoredEvent(int team);
-        public event ScoredEvent Scored;
 
         // --- Properties -------------------------------------------------------------------------------------------------
         public bool IsEntering { get { return _isEntering; } set {  _isEntering = value; } }
         public bool IsWaiting { get { return _isWaiting;} set { _isWaiting = value; } }
         public bool IsLeaving { get { return _isLeaving; } set { _isLeaving = value; } }
 
-        public int Team { get { return _team; } set { _team = value; } }
+        public Team Team { get { return _team; } set { _team = value; } }
         // --- Unity Functions -----------------------------------------------------------------------------------------------
         void Start()
         {
@@ -39,13 +37,16 @@ namespace LJ
             _icon = GetComponentInChildren<Image>();
             this.GetComponent<BoxCollider>().enabled = false;
             _canvas.enabled = false;
-
-
         }
 
         // --- Event callbacks --------------------------------------------------------------------------------------------
 
         // --- Public/Internal Methods ------------------------------------------------------------------------------------
+
+        public void SetCustomerController(CustomerController controller)
+        {
+            _controller = controller;
+        }
 
         public bool TryGivePotion(SO_PotionData potion)
         {
@@ -57,7 +58,7 @@ namespace LJ
                 _isLeaving = true;
                 _canvas.enabled = false;
 
-                Scored?.Invoke(_team);
+                _team.AddPoint();
 
                 return true;
             }

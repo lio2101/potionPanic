@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace LJ.UI
@@ -14,6 +15,7 @@ namespace LJ.UI
         // --- Fields -----------------------------------------------------------------------------------------------------
         [SerializeField] private TeamManager _teamManager;
         [SerializeField] private CharacterConfigurationUI[] _configurationUI;
+        [SerializeField] private GameObject _returnMenu;
 
         // --- Properties -------------------------------------------------------------------------------------------------
 
@@ -21,6 +23,11 @@ namespace LJ.UI
         private void Awake()
         {
             _teamManager.PlayerJoined += OnPlayerJoined;
+        }
+
+        private void Start()
+        {
+            _teamManager = TeamManager.Instance;
         }
 
         private void OnDestroy()
@@ -44,6 +51,11 @@ namespace LJ.UI
                 _teamManager.Approve();
             }
             else { Debug.Log("Not all players ready");  }
+        }
+
+        private void OnReturn(InputValue inputValue)
+        {
+            _returnMenu.SetActive(true);
         }
 
         // --- Public/Internal Methods ------------------------------------------------------------------------------------

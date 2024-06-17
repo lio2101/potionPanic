@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace LJ
+namespace LJ.UI
 {
     public class CharacterConfigurationUI : MonoBehaviour
     {
@@ -49,6 +49,7 @@ namespace LJ
 
         private void OnTeamSwitched(Player player, int teamIndex)
         {
+            Debug.Log("Change Team color");
             _teamColorImage.color = teamIndex switch
             {
                 0 => Color.blue,
@@ -60,8 +61,8 @@ namespace LJ
         // --- Public/Internal Methods ------------------------------------------------------------------------------------
         public void LinkToPlayer(Player player)
         {
-            LinkedPlayer = player;
 
+            LinkedPlayer = player;
             LinkedPlayer.TeamSwitched += OnTeamSwitched;
             LinkedPlayer.ReadyStatusChanged += OnReadyStatusChanged;
         }

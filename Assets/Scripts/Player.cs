@@ -40,13 +40,13 @@ namespace LJ
         public delegate void TeamSwitchedEvent(Player player, int teamIndex);
         public event TeamSwitchedEvent TeamSwitched;
 
-        public delegate void GamePausedEvent();
-        public event GamePausedEvent GamePaused;
+        //public delegate void GamePausedEvent();
+        //public event GamePausedEvent GamePaused;
 
 
         // --- Properties -------------------------------------------------------------------------------------------------
         public bool IsReady => _isReady;
-        public bool IsPlayerOne {  get { return _isPlayerOne; } set { _isPlayerOne = value; } }
+        public bool IsPlayerOne { get { return _isPlayerOne; } set { _isPlayerOne = value; } }
 
         // --- Unity Functions -----------------------------------------------------------------------------------------------
 
@@ -152,21 +152,38 @@ namespace LJ
             }
         }
 
+        public void OnReturn(InputValue inputValue)
+        {
+            if(inputValue.isPressed)
+            {
+                if(this.IsPlayerOne)
+                {
+                    _gm.PauseRound();
+                }
+            }
+        }
+
         // --- Protected/Private Methods ----------------------------------------------------------------------------------
         private void ChangeActionMap()
         {
-            if(GameManager.IS_CHARACTERSELECT)
+            switch(GameManager.Instance.CurrentGameState)
             {
-                _playerInput.SwitchCurrentActionMap("CharacterSelect");
-            }
-            else if(GameManager.IS_GAME_ACTIVE)
-            {
-                _playerInput.SwitchCurrentActionMap("GameControls");
-            }
-            else if (GameManager.IS_GAME_PAUSED)
-            {
-                Debug.Log("UI Controls");
-                _playerInput.SwitchCurrentActionMap("UI");
+                case GameManager.GameState.MainMenu:
+                    _playerInput.SwitchCurrentActionMap("UI");
+                    break;
+                case GameManager.GameState.CharacterSelection:
+                    _playerInput.SwitchCurrentActionMap("CharacterSelect");
+                    break;
+                case GameManager.GameState.GameRunning:
+                    Debug.Log("ChangeActionMap to GameControls");
+                    _playerInput.SwitchCurrentActionMap("GameControls");
+                    break;
+                case GameManager.GameState.GamePaused:
+                    Debug.Log("ChangeActionMap to UI");
+                    _playerInput.SwitchCurrentActionMap("UI");
+                    break;
+                case GameManager.GameState.GameOver:
+                    break;
             }
         }
 

@@ -13,10 +13,26 @@ namespace LJ
     public class Team
     {
         [SerializeField] private List<Player> _players = new();
+        [SerializeField] private int _teamScore;
+        [SerializeField] private string _teamName;
+
+        private int _index;
+        public int Index => _index;
+
+        public int TeamScore => _teamScore;
+        public string TeamName { get { return _teamName; } set { _teamName = value; } }
 
         public List<Player> Players { get { return _players; } }
         //public bool IsFull => _players.Count == 2;
         public int PlayerCount => _players.Count;
+
+        public delegate void ScoreChangedEvent(Team team, int score);
+        public event ScoreChangedEvent ScoreChanged;
+
+        public void SetIndex(int index)
+        {
+            _index = index;
+        }
 
         public void AddPlayer(Player player)
         {
@@ -32,6 +48,12 @@ namespace LJ
         {
             return _players.FirstOrDefault(p => p == player);
         }
+
+        public void AddPoint()
+        {
+            _teamScore++;
+            ScoreChanged?.Invoke(this, _teamScore);
+        }
     }
 
     public class TeamManager : MonoBehaviour
@@ -44,7 +66,6 @@ namespace LJ
         [SerializeField] private PlayerInputManager _playerInputManager;
 
         [SerializeField] private List<Team> _teams;
-
         private const int MAX_TEAM_AMOUNT = 2;
 
         public delegate void PlayerJoinedEvent(Player player);
@@ -56,14 +77,32 @@ namespace LJ
         public List<Team> Teams { get { return _teams; } }
 
         public int CurrentPlayerCount => _teams.Sum(t => t.PlayerCount);
+
+        public static TeamManager Instance { get; private set; }
         //private bool AllTeamsFull => _teams.All(t => t.IsFull);
 
         // --- Unity Functions --------------------------------------------------------------------------------------------
+        private void Awake()
+        {
+            if(Instance != null && Instance != this)
+            {
+                Destroy(this.gameObject);
+                return;
+            }
+
+            Instance = this;
+            DontDestroyOnLoad(this);
+        }
+
         private void Start()
         {
             _gm = GameManager.Instance;
             _gm.RoundFinished += OnRoundFinished;
-            DontDestroyOnLoad(this);
+
+            for(int i = 0; i < _teams.Count; i++)
+            {
+                _teams[i].SetIndex(i);
+            }
         }
 
         private void OnEnable()
@@ -71,6 +110,7 @@ namespace LJ
             //subscribe
             _playerInputManager.onPlayerJoined += OnPlayerJoined;
             _playerInputManager.onPlayerLeft += OnPlayerLeft;
+
         }
 
 
@@ -103,12 +143,8 @@ namespace LJ
                 playerInput.ActivateInput();
             }
 
-            if(_teams.Count < MAX_TEAM_AMOUNT)
-            {
-                Team team = new();
-                _teams.Add(team);
-            }
-            _teams[0].AddPlayer(player);
+            Team teamToJoinTo = _teams.OrderBy(t => t.PlayerCount).FirstOrDefault();
+            _teams[teamToJoinTo.Index].AddPlayer(player);
 
             player.transform.position = _spawnPositions[CurrentPlayerCount - 1].position;
             Physics.SyncTransforms();
@@ -126,11 +162,6 @@ namespace LJ
 
             if(CurrentPlayerCount > 1)
             {
-                if(_teams.Count < MAX_TEAM_AMOUNT)
-                {
-                    Team team = new();
-                    _teams.Add(team);
-                }
                 if(teamIndex == 0)
                 {
                     _teams[0].Players.Remove(player);
@@ -158,7 +189,7 @@ namespace LJ
 
         private void OnPause(InputValue inputValue)
         {
-            
+
         }
 
 
@@ -168,12 +199,14 @@ namespace LJ
         {
             foreach(var team in _teams)
             {
-                foreach (var player in team.Players)
+                foreach(var player in team.Players)
                 {
                     //team.Players.Remove(player);
                     Destroy(player.gameObject);
                 }
             }
+
+
             Debug.Log("Destroyed all players");
             Destroy(this.gameObject);
         }
@@ -184,6 +217,17 @@ namespace LJ
         //}
 
         // --- Public/Internal Methods ------------------------------------------------------------------------------------
+
+        public Team CalculateWinner()
+        {
+            Team leader = _teams.OrderByDescending(t => t.TeamScore).FirstOrDefault();
+            int leaders = _teams.Count(t => t.TeamScore == leader.TeamScore);
+
+            return leaders == 1 ? leader : null;
+
+            //return _teams.OrderByDescending(t => t.TeamScore).FirstOrDefault();
+        }
+
         public void Approve()
         {
             if(CurrentPlayerCount == 2 || CurrentPlayerCount == 4)
@@ -220,13 +264,13 @@ namespace LJ
                     foreach(var player in team.Players)
                     {
                         player.transform.position = _gameSpawnPositions[index].position;
-                        
+
                         Physics.SyncTransforms();
                         index++;
                     }
                 }
                 Debug.Log("Moved all players to new spawn positions");
-                
+
             }
         }
 
