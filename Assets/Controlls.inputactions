@@ -632,6 +632,17 @@
                 },
                 {
                     "name": "",
+                    "id": "6fa4eb18-a1fd-451a-95fe-f756e2eca52f",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Confirm",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "60b30d23-490b-48d4-8449-b247d20eaf34",
                     "path": "<Keyboard>/escape",
                     "interactions": "",
