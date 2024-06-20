@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -20,7 +21,7 @@ namespace LJ
         public int Index => _index;
         public Material HatColor => _hatColor;
         public Color Color => _color;
-        public int TeamScore => _teamScore;
+        public int TeamScore { get { return _teamScore; } set { _teamScore = value; } }
         public string TeamName { get { return _teamName; } set { _teamName = value; } }
 
         public List<Player> Players { get { return _players; } }
@@ -74,7 +75,6 @@ namespace LJ
 
         // --- Properties -------------------------------------------------------------------------------------------------
         public List<Team> Teams { get { return _teams; } }
-
         public int CurrentPlayerCount => _teams.Sum(t => t.PlayerCount);
 
         public static TeamManager Instance { get; private set; }
@@ -94,8 +94,6 @@ namespace LJ
 
         private void Start()
         {
-            GameManager.Instance.RoundFinished += OnRoundFinished;
-
             for(int i = 0; i < _teams.Count; i++)
             {
                 _teams[i].SetIndex(i);
@@ -116,6 +114,11 @@ namespace LJ
             //unsubscribe
             _playerInputManager.onPlayerJoined -= OnPlayerJoined;
             _playerInputManager.onPlayerLeft -= OnPlayerLeft;
+        }
+
+        private void OnDestroy()
+        {
+            DeletePlayers();
         }
 
         private void OnPlayerJoined(PlayerInput playerInput)
@@ -177,18 +180,31 @@ namespace LJ
         }
 
         // --- Event callbacks --------------------------------------------------------------------------------------------
-        private void OnRoundFinished()
+        //private void OnRoundFinished()
+        //{
+        //    //move Players back to spawn
+        //    foreach(var team in _teams)
+        //    {
+        //        foreach(var player in team.Players)
+        //        {
+        //            player.transform.position = _gameSpawnPositions[CurrentPlayerCount - 1].position;
+        //        }
+        //    }
+        //}
+
+        private void DeletePlayers()
         {
-            //move Players back to spawn
             foreach(var team in _teams)
             {
                 foreach(var player in team.Players)
                 {
-                    player.transform.position = _spawnPositions[CurrentPlayerCount - 1].position;
+                    if(player != null)
+                    {
+                        Destroy(player.gameObject);
+                    }
                 }
             }
             Debug.Log("Destroyed all players");
-            //Destroy(this.gameObject);
         }
 
         // --- Public/Internal Methods ------------------------------------------------------------------------------------
@@ -198,52 +214,48 @@ namespace LJ
             Team leader = _teams.OrderByDescending(t => t.TeamScore).FirstOrDefault();
             int leaders = _teams.Count(t => t.TeamScore == leader.TeamScore);
 
+            //Reset Scores
+            foreach(Team team in _teams)
+            {
+                team.TeamScore = 0;
+            }
+
             return leaders == 1 ? leader : null;
         }
 
         public void Approve()
         {
-            if(CurrentPlayerCount == 2 || CurrentPlayerCount == 4)
+            bool evenTeams = _teams.All(t => t.PlayerCount == CurrentPlayerCount / _teams.Count);
+            if(evenTeams)
             {
-                Debug.Log("Valid player amount");
-                if(_teams.Count(t => t.PlayerCount == 1) == 2)
-                {
-                    Debug.Log("1 v 1 Starting");
-
-                    StartCoroutine(CountDownRoutine());
-
-                }
-                else if(_teams.Count(t => t.PlayerCount == 2) == 2)
-                {
-                    Debug.Log("2 v 2 Starting");
-
-                    StartCoroutine(CountDownRoutine());
-
-                }
-                else { Debug.Log("Invalid team sizes"); }
+                GameManager.Instance.StartRound();
             }
             else
             {
+                if(CurrentPlayerCount % _teams.Count != 0)
+                {
+                    // not enough players
+                }
+                else if(!evenTeams)
+                {
+                    // uneven teams
+                }
+
                 Debug.Log("Invalid player amount. Please play with 2 or 4 players");
             }
+        }
 
-            IEnumerator CountDownRoutine()
+        public void SetPlayerGamePositions()
+        {
+            int index = 0;
+            foreach(var team in _teams)
             {
-                yield return new WaitForSeconds(3);
-                GameManager.Instance.StartRound();
-                int index = 0;
-                foreach(var team in _teams)
+                foreach(Player player in team.Players)
                 {
-                    foreach(var player in team.Players)
-                    {
-                        player.transform.position = _gameSpawnPositions[index].position;
-
-                        Physics.SyncTransforms();
-                        index++;
-                    }
+                    player.transform.position = _gameSpawnPositions[index].position;
+                    Physics.SyncTransforms();
+                    index++;
                 }
-                Debug.Log("Moved all players to new spawn positions");
-
             }
         }
 

@@ -68,6 +68,12 @@ namespace LJ
                 base.OnMove(eventData);
             }
         }
+
+        public void SetValue(float value)
+        {
+            _volumeSlider.value = value;
+        }
+
         // --- Protected/Private Methods ----------------------------------------------------------------------------------
 
         // --------------------------------------------------------------------------------------------

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -77,6 +78,15 @@ namespace LJ.UI
             _selectedIndex = 0;
             _options.AddRange(newOptions);
             
+        }
+
+        public void SetValue(int index)
+        {
+            if(_options.Count == 0)
+                return;
+
+            _selectedIndex = Mathf.Clamp(index, 0, _options.Count - 1);
+            _label.text = _options[_selectedIndex].ToString();
         }
 
         // --- Protected/Private Methods ----------------------------------------------------------------------------------

@@ -35,6 +35,7 @@ namespace LJ
         // --- Unity Functions --------------------------------------------------------------------------------------------
         private void Start()
         {
+            GameManager.Instance.RoundFinished += ClearInventory;
             UpdateInventoryUI();
             _audioSource = GetComponent<AudioSource>();
         }
@@ -103,6 +104,13 @@ namespace LJ
             {
                 _inventorySlots[index].enabled = false;
             }
+        }
+
+        private void ClearInventory()
+        {
+            _herbs.Clear();
+            _potion = null;
+            UpdateInventoryUI() ;
         }
 
         // --------------------------------------------------------------------------------------------

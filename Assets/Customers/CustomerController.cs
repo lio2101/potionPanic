@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -29,7 +30,6 @@ namespace LJ
                 customer = Instantiate(prefab, _spawnPosition.position, Quaternion.identity);
                 customer.Team = team;
                 customer.SetCustomerController(controller);
-                count++;
                 Debug.Log($"New customer team {team}");
             }
 
@@ -43,22 +43,21 @@ namespace LJ
         [SerializeField] private CustomerData _customerDataTeam2;
         [SerializeField] private float _moveSpeed = 2;
         [SerializeField] private GameMenu _gameMenu;
-        [SerializeField] TeamManager _teamManager;
 
         public delegate void ScoreChangedEvent(int team);
         public ScoreChangedEvent ScoreChanged;
 
-        private GameManager _gameManager;
-
         // --- Properties -------------------------------------------------------------------------------------------------
 
         // --- Unity Functions --------------------------------------------------------------------------------------------
+
+        private void Awake()
+        {
+            //GameManager.Instance.RoundFinished += Reset;
+        }
         private void Start()
         {
-            _teamManager = TeamManager.Instance;
-            _gameManager = GameManager.Instance;
-
-            foreach(Team team in _teamManager.Teams)
+            foreach(Team team in TeamManager.Instance.Teams)
             {
                 CreateCustomer(team);
             }
@@ -79,6 +78,13 @@ namespace LJ
         }
 
         // --- Protected/Private Methods ----------------------------------------------------------------------------------
+        //private void Reset()
+        //{
+        //    Destroy(_customerDataTeam1.customer.gameObject);
+        //    Destroy(_customerDataTeam2.customer.gameObject);
+        //    Start();
+        //}
+
 
         private void CreateCustomer(Team team)
         {
@@ -97,9 +103,9 @@ namespace LJ
                 {
                     MoveTowards(data.TargetPos, OnTargetReached);
                     customer.transform.LookAt(data.SpawnPos);
+                    
                     void OnTargetReached()
                     {
-                        customer.IsEntering = false;
                         customer.Wait();
                     }
                 }
@@ -111,14 +117,18 @@ namespace LJ
                     {
                         Team currentTeam = customer.Team;
                         Destroy(customer.gameObject);
+
+                        data.count++;
+
                         if(data.count < GameManager.ORDERS_PER_ROUND)
                         {
                             data.CreateCustomer(_customerPrefabs.GetRandomElement(), currentTeam, this);
                         }
                         else
                         {
+
                             GameManager.Instance.EndRound();
-                            _gameMenu.ShowFinalScore(_teamManager.CalculateWinner());
+                            _gameMenu.ShowFinalScore(TeamManager.Instance.CalculateWinner());
                         }
                     }
                 }

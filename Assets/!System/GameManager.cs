@@ -29,9 +29,10 @@ namespace LJ
         [SerializeField] private AudioClip _gameMusic;
         private AudioSource _audioSource;
 
+        private Coroutine _startGameRoutine;
+
         public const int ORDERS_PER_ROUND = 1;
         public const int ORDER_TIME = 30;
-
 
         public delegate void CharacterSelectionActiveEvent();
         public event CharacterSelectionActiveEvent CharacterSelectionActive;
@@ -49,6 +50,7 @@ namespace LJ
         public static GameManager Instance { get; private set; }
         public GameState CurrentGameState => _currentGameState;
 
+        public bool GameStarting => _startGameRoutine != null;
         // --- Unity Functions --------------------------------------------------------------------------------------------
         private void Awake()
         {
@@ -85,14 +87,18 @@ namespace LJ
         // --- Public/Internal Methods ------------------------------------------------------------------------------------
         public void StartMainMenu()
         {
-            _audioSource.clip = _menuMusic;
-            _audioSource.Play();
             _currentGameState = GameState.MainMenu;
+
+            if(TeamManager.Instance != null)
+                Destroy(TeamManager.Instance.gameObject);
+
+            ToggleMusic();
             SceneManager.LoadScene(0);
         }
 
         public void StartCharacterSelection()
         {
+            Time.timeScale = 1f;
             Debug.Log("Start Character Select");
             _currentGameState = GameState.CharacterSelection;
 
@@ -105,46 +111,52 @@ namespace LJ
 
         public void StartRound()
         {
-            _audioSource.clip = _gameMusic;
-            _audioSource.Play();
+            _startGameRoutine = StartCoroutine(StartGameRoutine());
+        }
 
-            Debug.Log("Start Round");
+        private IEnumerator StartGameRoutine()
+        {
             Time.timeScale = 1f;
-            _currentGameState = GameState.GameRunning;
 
-            if(SceneManager.GetActiveScene().buildIndex != 2 || _currentGameState == GameState.GameIsEnding)
-            {
-                SceneManager.LoadScene(2);
-                //How to Reload Scene?
-            }
+            SceneManager.LoadScene(2);
+            yield return new WaitForSeconds(0.1f);
+            TeamManager.Instance.SetPlayerGamePositions();
+
+            yield return new WaitForSeconds(3f);
+
+            _currentGameState = GameState.GameRunning;
+            ToggleMusic();
+            Debug.Log("Start a new game");
+            
+            _startGameRoutine = null;
+            RoundActive?.Invoke();
+        }
+
+        public void ResumeRound()
+        {
+            _currentGameState = GameState.GameRunning;
+            ToggleMusic();
+            Time.timeScale = 1f;
             RoundActive?.Invoke();
         }
 
         public void PauseRound()
         {
-            if(SceneManager.GetActiveScene().buildIndex == 2)
-            {
-                _audioSource.Pause();
-            }
-
-            Debug.Log("Paused Round");
-            Time.timeScale = 0f;
             _currentGameState = GameState.GamePaused;
+            Time.timeScale = 0f;
+
+            ToggleMusic();
             RoundPaused?.Invoke();
+            Debug.Log("Paused Round");
         }
         public void EndRound()
         {
-            _audioSource.clip = _menuMusic;
-            _audioSource.Play();
+            Time.timeScale = 0;
+            ToggleMusic();
 
             Debug.Log("Game Over");
             _currentGameState = GameState.GameIsEnding;
             RoundFinished?.Invoke();
-        }
-
-        public void Reset()
-        {
-            
         }
 
         public void QuitGame()
@@ -152,6 +164,32 @@ namespace LJ
             Application.Quit();
         }
         // --- Protected/Private Methods ----------------------------------------------------------------------------------
+
+        private void ToggleMusic()
+        {
+            switch(_currentGameState)
+            {
+                case GameState.MainMenu:
+                case GameState.CharacterSelection:
+                    if(_audioSource.clip != _menuMusic)
+                        _audioSource.clip = _menuMusic;
+                    _audioSource.Play();
+                    break;
+                case GameState.GameRunning:
+                    if(_audioSource.clip != _gameMusic)
+                        _audioSource.clip = _gameMusic;
+                    _audioSource.Play();
+                    break;
+                case GameState.GamePaused:
+                    _audioSource.Pause();
+                    break;
+                case GameState.GameIsEnding:
+                case GameState.GameOver:
+                    if(_audioSource.isPlaying)
+                        _audioSource.Stop();
+                    break;
+            }
+        }
 
         // --------------------------------------------------------------------------------------------
     }

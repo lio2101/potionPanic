@@ -10,6 +10,14 @@ namespace LJ
     {
         // --- Enums ------------------------------------------------------------------------------------------------------		
 
+        private enum CustomerState
+        {
+            None,
+            Entering,
+            Waiting,
+            Leaving
+        }
+
         // --- Fields -----------------------------------------------------------------------------------------------------
         [SerializeField] private Image _icon;
         [SerializeField] private Canvas _canvas;
@@ -20,24 +28,17 @@ namespace LJ
 
         private AudioSource _audioSource;
 
+        private CustomerState _state;
         private CustomerController _controller;
         private SO_PotionData _potionOrder;
         private Team _team;
-        private bool _isEntering, _isWaiting, _isLeaving;
+        private bool _receivedOrder;
 
         // --- Properties -------------------------------------------------------------------------------------------------
-        public bool IsEntering { get { return _isEntering; } set { _isEntering = value; } }
-        public bool IsWaiting { get { return _isWaiting; } set { _isWaiting = value; } }
-        public bool IsLeaving
-        {
-            get { return _isLeaving; }
-            set
-            {
-                _isLeaving = value;
-                //_audioSource.clip = _payItem;
-                //_audioSource.Play();
-            }
-        }
+        public bool IsEntering => _state == CustomerState.Entering;
+        public bool IsWaiting => _state == CustomerState.Waiting;
+        public bool IsLeaving => _state == CustomerState.Leaving;
+        public bool ReceivedOrder => _receivedOrder;
 
         public Team Team { get { return _team; } set { _team = value; } }
         // --- Unity Functions -----------------------------------------------------------------------------------------------
@@ -46,7 +47,7 @@ namespace LJ
             _potionOrder = _potions.Recipes.GetRandomElement().PotionData;
             _icon.sprite = _potionOrder.Icon;
 
-            _isEntering = true;
+            _state = CustomerState.Entering;
             _canvas = GetComponentInChildren<Canvas>();
             _icon = GetComponentInChildren<Image>();
             this.GetComponent<BoxCollider>().enabled = false;
@@ -70,8 +71,8 @@ namespace LJ
             {
                 StopCoroutine(CountDown());
                 Debug.Log("Force Stop Timer");
-                _isWaiting = false;
-                _isLeaving = true;
+                _state = CustomerState.Leaving;
+                _receivedOrder = true;
                 _canvas.enabled = false;
 
                 _team.AddPoint();
@@ -96,10 +97,9 @@ namespace LJ
         public IEnumerator CountDown()
         {
             Debug.Log("StartTimer");
-            _isWaiting = true;
+            _state = CustomerState.Waiting;
             yield return new WaitForSeconds(GameManager.ORDER_TIME);
-            _isWaiting = false;
-            _isLeaving = true;
+            _state = CustomerState.Leaving;
             _canvas.enabled = false;
             Debug.Log("Stop Timer");
         }

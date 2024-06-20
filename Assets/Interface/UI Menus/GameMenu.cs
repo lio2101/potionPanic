@@ -56,14 +56,14 @@ namespace LJ
         // --- Public/Internal Methods ------------------------------------------------------------------------------------
         public void ShowFinalScore(Team team)
         {
+            _finishCanvas.SetActive(true);
             if(team != null)
             {
-                _finishCanvas.SetActive(true);
                 string baseString = _winnerText.text;
                 StringBuilder sb = new();
                 sb.Append(baseString);
                 sb.Replace("%TEAM%", $"{team.TeamName}");
-                sb.Replace("%POINTS%", $"{team.TeamScore}");
+                //sb.Replace("%POINTS%", $"{team.TeamScore}");
                 _winnerText.text = sb.ToString();
             }
             else

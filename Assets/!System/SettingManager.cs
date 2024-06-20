@@ -1,15 +1,11 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using UnityEngine;
 using UnityEngine.Audio;
-using static LJ.UI.SettingsMenu;
 
 namespace LJ
 {
-	public class SettingManager : MonoBehaviour
-	{
+    public class SettingManager : MonoBehaviour
+    {
         // --- Enums ------------------------------------------------------------------------------------------------------
 
         // --- Fields -----------------------------------------------------------------------------------------------------
@@ -17,18 +13,16 @@ namespace LJ
 
         private Resolution[] _availableResolutions;
 
-        private Resolution _currentResolution;
-        private FullScreenMode _currentScreenSetting;
-        private RefreshRate _currentRefreshRate;
+        private const float MIN_VOLUME = -80f;
+        private const float MAX_VOLUME = 0f;
 
-        private float _masterVolume;
-        private float _musicVolume;
-        private float _effectVolume;
+        private const float MIN_VOLUME_SLIDER_VALUE = 0f;
+        private const float MAX_VOLUME_SLIDER_VALUE = 10f;
 
         public static readonly FullScreenMode[] SUPPORTED_WINDOW_MODES = new FullScreenMode[]
         {
-            FullScreenMode.ExclusiveFullScreen, 
-            FullScreenMode.FullScreenWindow, 
+            FullScreenMode.ExclusiveFullScreen,
+            FullScreenMode.FullScreenWindow,
             FullScreenMode.Windowed
         };
 
@@ -39,9 +33,14 @@ namespace LJ
             "Window",
         };
 
+        private const string FILE_NAME = "settings.json";
+        private Settings _settings;
+
         // --- Properties -------------------------------------------------------------------------------------------------
         public static SettingManager Instance { get; private set; }
-        public Resolution[] AvailableResolutions {  get { return _availableResolutions; } }
+        public static Settings Settings => Instance != null ? Instance._settings : null;
+        public Resolution[] AvailableResolutions { get { return _availableResolutions; } }
+        private string SettingsPath => Path.Combine(Application.persistentDataPath, FILE_NAME);
 
 
         // --- Unity Functions --------------------------------------------------------------------------------------------
@@ -60,50 +59,101 @@ namespace LJ
         private void Start()
         {
             _availableResolutions = Screen.resolutions;
-            _currentResolution = Screen.currentResolution;
-            _currentRefreshRate = Screen.currentResolution.refreshRateRatio;
-            _currentScreenSetting = Screen.fullScreenMode;
+            LoadSettings();
+            ApplySettings();
 
-            //subscribe to Value Changed events
+            //subscribe to Value Changed events            
         }
 
         // --- Event callbacks --------------------------------------------------------------------------------------------
 
         // --- Public/Internal Methods ------------------------------------------------------------------------------------
+        public void LoadSettings()
+        {
+            if(File.Exists(SettingsPath))
+            {
+                string json = File.ReadAllText(SettingsPath);
+                _settings = JsonUtility.FromJson<Settings>(json);
+            }
+            else
+            {
+                _settings = Settings.CreateDefault();
+                SaveSettings();
+            }
+        }
+
+        public void SaveSettings()
+        {
+            if(_settings == null)
+            {
+                Debug.LogError($"Cant save NULL");
+                return;
+            }
+            //try catch error
+            string json = JsonUtility.ToJson(_settings, true);
+            File.WriteAllText(SettingsPath, json);
+        }
+
+        public void ApplySettings()
+        {
+            ApplyVideoSettings();
+            ApplyAudioSettings();
+        }
+
+        // --------------------------------------------------------------------------------------------
         public void SetNewResolution(int newValue)
         {
             Debug.Log($"Set New Resolution to {_availableResolutions[newValue].width} x {_availableResolutions[newValue].height}");
-            Screen.SetResolution(_availableResolutions[newValue].width, _availableResolutions[newValue].height, _currentScreenSetting, _currentRefreshRate);
+            _settings.resolutionX = _availableResolutions[newValue].width;
+            _settings.resolutionY = _availableResolutions[newValue].height;
+            ApplyVideoSettings();
         }
 
         internal void SetScreenSetting(int newValue)
         {
             FullScreenMode mode = SUPPORTED_WINDOW_MODES[newValue];
+            _settings.fullScreenMode = mode;
             Debug.Log($"Set Screen Setting to {mode}");
-            Screen.SetResolution(_currentResolution.width, _currentResolution.height, mode, _currentRefreshRate);
+            ApplyVideoSettings();
         }
 
         internal void SetMasterVolume(float newValue, float percentage)
         {
-            float newVolume = Mathf.Lerp(-80f, 20f, percentage);
-
-            Debug.Log($"Set master to {newVolume}");
-            _mixer.SetFloat("MasterVolume", newVolume);
+            _settings.masterVolume = (int)newValue;
+            ApplyAudioSettings();
         }
 
         internal void SetMusicVolume(float newValue, float percentage)
         {
-            float newVolume = Mathf.Lerp(-80f, 20f, percentage);
-            _mixer.SetFloat("MusicVolume", newVolume);
+            _settings.musicVolume = (int)newValue;
+            ApplyAudioSettings();
         }
 
         internal void SetEffectVolume(float newValue, float percentage)
         {
-            float newVolume = Mathf.Lerp(-80f, 20f, percentage);
-            _mixer.SetFloat("SfxVolume", newVolume);
+            _settings.sfxVolume = (int)newValue;
+            ApplyAudioSettings();
         }
 
-        // --- Protected/Private Methods ----------------------------------------------------------------------------------
+        // --- Protected/Private Methods ----------------------------------------------------------------------------------        
+        private void ApplyVideoSettings()
+        {
+            Screen.SetResolution(_settings.resolutionX, _settings.resolutionY, _settings.fullScreenMode, _settings.RefreshRate);
+        }
+
+        private void ApplyAudioSettings()
+        {
+            SetVolume("MasterVolume", _settings.masterVolume);
+            SetVolume("MusicVolume", _settings.musicVolume);
+            SetVolume("SfxVolume", _settings.sfxVolume);
+        }
+
+        private void SetVolume(string parameter, float value)
+        {
+            float t = Mathf.InverseLerp(MIN_VOLUME_SLIDER_VALUE, MAX_VOLUME_SLIDER_VALUE, value);
+            float newVolume = Mathf.Lerp(MIN_VOLUME, MAX_VOLUME, t);
+            _mixer.SetFloat(parameter, newVolume);
+        }
 
         // --------------------------------------------------------------------------------------------
     }

@@ -32,7 +32,7 @@ namespace LJ
         private InputAction _changeAppearanceAction;
         private InputAction _readyAction;
 
-        private bool _isPlayerOne = false;
+        [SerializeField] private bool _isPlayerOne = false;
 
         //Delegates
         public delegate void ReadyStatusChangedEvent(Player player, bool isReady);
@@ -65,12 +65,15 @@ namespace LJ
             GameManager.Instance.CharacterSelectionActive += ChangeActionMap;
             GameManager.Instance.RoundActive += ChangeActionMap;
             GameManager.Instance.RoundFinished += ChangeActionMap;
+            //GameManager.Instance.ReloadGame += ChangeActionMap;
         }
         private void OnDestroy()
         {
             GameManager.Instance.CharacterSelectionActive -= ChangeActionMap;
             GameManager.Instance.RoundActive -= ChangeActionMap;
             GameManager.Instance.RoundFinished -= ChangeActionMap;
+            //GameManager.Instance.ReloadGame -= ChangeActionMap;
+
         }
 
         // --- Event callbacks --------------------------------------------------------------------------------------------
@@ -123,6 +126,12 @@ namespace LJ
             Debug.Log("OnReady");
             if(inputValue.isPressed)
             {
+                if(GameManager.Instance.GameStarting)
+                {
+                    Debug.LogWarning("Can't unready because game is already starting!");
+                    return;
+                }
+
                 Debug.Log("Ready or Not");
                 _isReady = !_isReady;
 
@@ -184,21 +193,24 @@ namespace LJ
                         _playerInput.SwitchCurrentActionMap("GameControls");
                         break;
                     case GameManager.GameState.GamePaused:
+                        if(this.IsPlayerOne)
+                        {
+                            Debug.Log("ChangeActionMap to UI");
+                            _playerInput.SwitchCurrentActionMap("UI");
+                        }
+                            break;
+                    case GameManager.GameState.GameIsEnding:
                         Debug.Log("ChangeActionMap to UI");
                         _playerInput.SwitchCurrentActionMap("UI");
                         break;
-                        //case GameManager.GameState.GameOver:
-                        //    Debug.Log("ChangeActionMap to UI");
-                        //    _playerInput.SwitchCurrentActionMap("UI");
-                        //    break;
-                        //case GameManager.GameState.MainMenu:
-                        //    Debug.Log("ChangeActionMap to UI");
-                        //    _playerInput.SwitchCurrentActionMap("UI");
-                        //    break;
-                        //case GameManager.GameState.GameIsEnding:
-                        //    Debug.Log("ChangeActionMap to UI");
-                        //    _playerInput.SwitchCurrentActionMap("UI");
-                        //    break;
+                    //case GameManager.GameState.GameOver:
+                    //    Debug.Log("ChangeActionMap to UI");
+                    //    _playerInput.SwitchCurrentActionMap("UI");
+                    //    break;
+                    //case GameManager.GameState.MainMenu:
+                    //    Debug.Log("ChangeActionMap to UI");
+                    //    _playerInput.SwitchCurrentActionMap("UI");
+                    //    break;
                 }
             }
         }
