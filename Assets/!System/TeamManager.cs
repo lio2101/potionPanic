@@ -30,6 +30,7 @@ namespace LJ
         public delegate void ScoreChangedEvent(Team team, int score);
         public event ScoreChangedEvent ScoreChanged;
 
+
         public void SetIndex(int index)
         {
             _index = index;
@@ -72,6 +73,9 @@ namespace LJ
 
         public delegate void PlayerJoinedEvent(Player player);
         public event PlayerJoinedEvent PlayerJoined;
+
+        public delegate void ReadyErrorEvent(string errorMessage);
+        public event ReadyErrorEvent ReadyError;
 
         // --- Properties -------------------------------------------------------------------------------------------------
         public List<Team> Teams { get { return _teams; } }
@@ -179,18 +183,7 @@ namespace LJ
             //player.TeamSwitched -= OnTeamSwitched;
         }
 
-        // --- Event callbacks --------------------------------------------------------------------------------------------
-        //private void OnRoundFinished()
-        //{
-        //    //move Players back to spawn
-        //    foreach(var team in _teams)
-        //    {
-        //        foreach(var player in team.Players)
-        //        {
-        //            player.transform.position = _gameSpawnPositions[CurrentPlayerCount - 1].position;
-        //        }
-        //    }
-        //}
+        // --- Event callbacks --------------------------------------------------------------------------------------------/}
 
         private void DeletePlayers()
         {
@@ -235,10 +228,11 @@ namespace LJ
                 if(CurrentPlayerCount % _teams.Count != 0)
                 {
                     // not enough players
-                }
+                    ReadyError?.Invoke("Invalid player amount!");
+    }
                 else if(!evenTeams)
                 {
-                    // uneven teams
+                    ReadyError?.Invoke("Invalid team sizes!");
                 }
 
                 Debug.Log("Invalid player amount. Please play with 2 or 4 players");

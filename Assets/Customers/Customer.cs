@@ -1,11 +1,23 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO.IsolatedStorage;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace LJ
 {
+    [Serializable]
+    public class PotionOrder
+    {
+
+        public SO_PotionData potionData;
+        public Image potionImage;
+        public bool hasReceived;
+
+    }
+
     public class Customer : MonoBehaviour, IInteractable
     {
         // --- Enums ------------------------------------------------------------------------------------------------------		
@@ -19,79 +31,92 @@ namespace LJ
         }
 
         // --- Fields -----------------------------------------------------------------------------------------------------
-        [SerializeField] private Image _icon;
-        [SerializeField] private Canvas _canvas;
+        [SerializeField] private Canvas _canvasOrder;
+        [SerializeField] private HorizontalLayoutGroup _layoutGroup;
+        [SerializeField] private Image _orderImagePrefab;
+
+        [SerializeField] private PotionOrder[] _orders;
+
         [SerializeField] private SO_RecipeCollection _potions;
 
         [SerializeField] private AudioClip _enterShop;
         [SerializeField] private AudioClip _payItem;
 
+        private Coroutine _countdownRoutine;
         private AudioSource _audioSource;
-
         private CustomerState _state;
-        private CustomerController _controller;
-        private SO_PotionData _potionOrder;
         private Team _team;
-        private bool _receivedOrder;
 
         // --- Properties -------------------------------------------------------------------------------------------------
         public bool IsEntering => _state == CustomerState.Entering;
         public bool IsWaiting => _state == CustomerState.Waiting;
         public bool IsLeaving => _state == CustomerState.Leaving;
-        public bool ReceivedOrder => _receivedOrder;
 
         public Team Team { get { return _team; } set { _team = value; } }
         // --- Unity Functions -----------------------------------------------------------------------------------------------
         void Start()
         {
-            _potionOrder = _potions.Recipes.GetRandomElement().PotionData;
-            _icon.sprite = _potionOrder.Icon;
-
+            int playerCount = Mathf.Max(1, TeamManager.Instance.CurrentPlayerCount);
+            _orders = new PotionOrder[Mathf.CeilToInt(playerCount / 2f)];
             _state = CustomerState.Entering;
-            _canvas = GetComponentInChildren<Canvas>();
-            _icon = GetComponentInChildren<Image>();
+
             this.GetComponent<BoxCollider>().enabled = false;
-            _canvas.enabled = false;
+
+            _canvasOrder.enabled = false;
 
             _audioSource = GetComponentInChildren<AudioSource>();
+
+            for(int i = 0; i < _orders.Length; i++)
+            {
+                _orders[i] = new();
+                Image orderImage = Instantiate(_orderImagePrefab, _layoutGroup.transform);
+                _orders[i].potionImage = orderImage;
+
+                _orders[i].potionData = _potions.Recipes.GetRandomElement().PotionData;
+                _orders[i].potionImage.sprite = _orders[i].potionData.Icon;
+            }
         }
 
         // --- Event callbacks --------------------------------------------------------------------------------------------
 
         // --- Public/Internal Methods ------------------------------------------------------------------------------------
 
-        public void SetCustomerController(CustomerController controller)
-        {
-            _controller = controller;
-        }
 
         public bool TryGivePotion(SO_PotionData potion)
         {
-            if(_potionOrder.Type == potion.Type)
+            PotionOrder order = _orders.FirstOrDefault(o => o.potionData == potion);
+
+            if(order != null)
             {
-                StopCoroutine(CountDown());
-                Debug.Log("Force Stop Timer");
-                _state = CustomerState.Leaving;
-                _receivedOrder = true;
-                _canvas.enabled = false;
-
-                _team.AddPoint();
-
                 _audioSource.clip = _payItem;
                 _audioSource.Play();
-                return true;
-            }
 
-            return false;
+                order.potionImage.SetAlpha(0.5f);
+                order.potionData = null;
+                order.hasReceived = true;
+
+                bool allOrdersReceived = _orders.All(o => o.hasReceived);
+                if(allOrdersReceived)
+                {
+                    StopCoroutine(_countdownRoutine);
+                    _state = CustomerState.Leaving;
+                    _canvasOrder.enabled = false;
+                    _team.AddPoint();
+                    Debug.Log("All orders received!");
+                }
+            }
+            return order != null;
         }
 
         public void Wait()
         {
             _audioSource.clip = _enterShop;
             _audioSource.Play();
-            _canvas.enabled = true;
+
+            _canvasOrder.enabled = true;
+
             this.GetComponent<BoxCollider>().enabled = true;
-            StartCoroutine(CountDown());
+            _countdownRoutine = StartCoroutine(CountDown());
         }
 
         public IEnumerator CountDown()
@@ -100,8 +125,9 @@ namespace LJ
             _state = CustomerState.Waiting;
             yield return new WaitForSeconds(GameManager.ORDER_TIME);
             _state = CustomerState.Leaving;
-            _canvas.enabled = false;
+            _canvasOrder.enabled = false;
             Debug.Log("Stop Timer");
+            _countdownRoutine = null;
         }
 
         public void PlayPaySound()

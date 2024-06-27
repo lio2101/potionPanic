@@ -29,7 +29,7 @@ namespace LJ
             {
                 customer = Instantiate(prefab, _spawnPosition.position, Quaternion.identity);
                 customer.Team = team;
-                customer.SetCustomerController(controller);
+                //customer.SetCustomerController(controller);
                 Debug.Log($"New customer team {team}");
             }
 
