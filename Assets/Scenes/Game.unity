@@ -1316,6 +1316,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cauldron (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 4923796733301498744, guid: ce08016112796444ab10cd4658071197,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7234608347185562487, guid: ce08016112796444ab10cd4658071197,
         type: 3}
       propertyPath: m_StaticEditorFlags
@@ -4237,6 +4242,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cauldron
       objectReference: {fileID: 0}
+    - target: {fileID: 4923796733301498744, guid: ce08016112796444ab10cd4658071197,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 7128987089759869276, guid: ce08016112796444ab10cd4658071197, type: 3}
@@ -6491,6 +6501,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Table BBlatt
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: fb61a8914b4d2394e8e2fb741c48b9ee,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -22247,6 +22262,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Table Pilz
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: fb61a8914b4d2394e8e2fb741c48b9ee,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -24179,6 +24199,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Table Schnecken
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: fb61a8914b4d2394e8e2fb741c48b9ee,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -24890,6 +24915,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Table Alraune
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: fb61a8914b4d2394e8e2fb741c48b9ee,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -25193,6 +25223,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Table RBeere
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: fb61a8914b4d2394e8e2fb741c48b9ee,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -25839,6 +25874,74 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2139691752}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &3295109262912799412
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 102017083151076331, guid: 38847db7e4848814db4b9ddc9ba145de,
+        type: 3}
+      propertyPath: m_Name
+      value: ZaubererRigg
+      objectReference: {fileID: 0}
+    - target: {fileID: 730074980910207313, guid: 38847db7e4848814db4b9ddc9ba145de,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -2.351461
+      objectReference: {fileID: 0}
+    - target: {fileID: 730074980910207313, guid: 38847db7e4848814db4b9ddc9ba145de,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.0000009536743
+      objectReference: {fileID: 0}
+    - target: {fileID: 730074980910207313, guid: 38847db7e4848814db4b9ddc9ba145de,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.38
+      objectReference: {fileID: 0}
+    - target: {fileID: 730074980910207313, guid: 38847db7e4848814db4b9ddc9ba145de,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 730074980910207313, guid: 38847db7e4848814db4b9ddc9ba145de,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 730074980910207313, guid: 38847db7e4848814db4b9ddc9ba145de,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 730074980910207313, guid: 38847db7e4848814db4b9ddc9ba145de,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 730074980910207313, guid: 38847db7e4848814db4b9ddc9ba145de,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 730074980910207313, guid: 38847db7e4848814db4b9ddc9ba145de,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 730074980910207313, guid: 38847db7e4848814db4b9ddc9ba145de,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 38847db7e4848814db4b9ddc9ba145de, type: 3}
 --- !u!1001 &5388531973350468593
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -26150,3 +26253,4 @@ SceneRoots:
   - {fileID: 369630090}
   - {fileID: 1934602348}
   - {fileID: 1837271956}
+  - {fileID: 3295109262912799412}
