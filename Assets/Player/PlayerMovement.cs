@@ -18,13 +18,12 @@ namespace LJ
 
         [SerializeField] private PlayerInput _playerInput;
         [SerializeField] private InputActionReference _movementReference;
-        //private InputAction _movementAction;
 
-        private GameManager _gameManager;
         private Camera _camera;
 
         private CharacterController _player;
         private Vector2 _movementInput;
+        private Animator _animator;
 
         // --- Properties -------------------------------------------------------------------------------------------------
 
@@ -33,28 +32,7 @@ namespace LJ
         {
             _player = GetComponent<CharacterController>();
             _camera = Camera.main;
-            _gameManager = GameManager.Instance;
-        }
-
-        private void OnEnable()
-        {
-            //_gameManager.GameActive += EnableMovement;
-            //_playerInput.onActionTriggered += OnPlayerActionTrriggered;
-
-            //_movementAction = _playerInput.actions.FindAction(_movementReference.action.id);
-            //_movementAction.started += OnMovement;
-            //_movementAction.performed += OnMovement;
-            //_movementAction.canceled += OnMovement;
-        }
-
-        private void OnDisable()
-        {
-            // _gameManager.GameActive -= EnableMovement;
-            //_movementAction.Disable();
-            //_movementAction.started -= OnMovement;
-            //_movementAction.performed -= OnMovement;
-            //_movementAction.canceled -= OnMovement;
-
+            _animator = GetComponentInChildren<Animator>();
         }
 
         private void Update()
@@ -70,7 +48,7 @@ namespace LJ
 
             if(movement != Vector3.zero)
             {
-                gameObject.transform.forward = -movement;
+                gameObject.transform.forward = movement;
             }
 
             movement = _maxSpeed * Time.deltaTime * movement;
@@ -83,17 +61,20 @@ namespace LJ
         }
 
         // --- Event callbacks --------------------------------------------------------------------------------------------
-        //private void EnableMovement(string actionMapName)
-        //{
-        //    Debug.Log("changed notification behavior");
-        //    _playerInput.notificationBehavior = PlayerNotifications.InvokeUnityEvents;
-
-        //}
 
         public void OnMovement(InputValue inputValue)
         {
             _movementInput = inputValue.Get<Vector2>();
-            //Debug.Log($"On movement: {_movementInput}");
+            if(_movementInput != null)
+            {
+                Debug.Log("isWalking");
+                _animator.SetBool("isWalking", true);
+
+            }
+            else
+            {
+                _animator.SetBool("isWalking", false);
+            }
         }
         // --- Public/Internal Methods ------------------------------------------------------------------------------------
 

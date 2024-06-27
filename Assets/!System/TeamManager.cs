@@ -147,6 +147,7 @@ namespace LJ
             _teams[teamToJoinTo.Index].AddPlayer(player);
 
             player.transform.position = _spawnPositions[CurrentPlayerCount - 1].position;
+            player.transform.Rotate(0, 180, 0);
             Physics.SyncTransforms();
             DontDestroyOnLoad(player);
 

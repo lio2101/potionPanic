@@ -8,7 +8,7 @@ namespace LJ
         // --- Enums ------------------------------------------------------------------------------------------------------		
 
         // --- Fields -----------------------------------------------------------------------------------------------------
-        [SerializeField] private MeshRenderer[] _characterModels;
+        [SerializeField] private GameObject[] _characterModels;
         [SerializeField] private MeshRenderer[] _hats;
         [SerializeField] private InputActionReference _switchTeamReference;
         [SerializeField] private InputActionReference _changeAppearanceReference;

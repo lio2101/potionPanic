@@ -3095,6 +3095,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: TeamManager
       objectReference: {fileID: 0}
+    - target: {fileID: 4387976712366654681, guid: 2c117eae0c296f9469aab2e2023221ec,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4754481304745243448, guid: 2c117eae0c296f9469aab2e2023221ec,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -4
+      objectReference: {fileID: 0}
     - target: {fileID: 5367761072253711948, guid: 2c117eae0c296f9469aab2e2023221ec,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3144,6 +3154,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6309011036603855352, guid: 2c117eae0c296f9469aab2e2023221ec,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6499485103400290734, guid: 2c117eae0c296f9469aab2e2023221ec,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
