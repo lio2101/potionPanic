@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering.Universal.Internal;
 using static LJ.CustomerController;
 
 namespace LJ
@@ -16,13 +17,16 @@ namespace LJ
         {
             [SerializeField] private Transform _targetPosition;
             [SerializeField] private Transform _spawnPosition;
+            //[SerializeField] private Transform _windowPosition;
             //[SerializeField] private int _team;
 
             [NonSerialized] public Customer customer;
             [NonSerialized] public int count;
 
-            public Vector3 SpawnPos => _spawnPosition.position;
-            public Vector3 TargetPos => _targetPosition.position;
+            public Transform SpawnPos => _spawnPosition;
+            public Transform TargetPos => _targetPosition;
+
+            //public Vector3 WindowPos => _windowPosition.position;
 
 
             public void CreateCustomer(Customer prefab, Team team, CustomerController controller)
@@ -99,20 +103,20 @@ namespace LJ
 
             if(customer != null)
             {
+                customer.transform.rotation = data.TargetPos.rotation;
                 if(customer.IsEntering)
                 {
-                    MoveTowards(data.TargetPos, OnTargetReached);
-                    customer.transform.LookAt(data.SpawnPos);
-                    
+                    MoveTowards(data.TargetPos.position, OnTargetReached);
+
                     void OnTargetReached()
                     {
+
                         customer.Wait();
                     }
                 }
                 else if(customer.IsLeaving)
                 {
-                    MoveTowards(data.SpawnPos, OnSpawnReached);
-                    customer.transform.LookAt(data.TargetPos);
+                    MoveTowards(data.SpawnPos.position, OnSpawnReached);
                     void OnSpawnReached()
                     {
                         Team currentTeam = customer.Team;

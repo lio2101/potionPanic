@@ -14,10 +14,11 @@ namespace LJ
         public enum PotionType
         {
             None = 0,
-            Health,
-            Poison,
-            Acid,
-            Failed
+            Healing,
+            HolyWater,
+            Luck,
+            Mushroom,
+            Poison
         }
         // --- Fields -----------------------------------------------------------------------------------------------------
         [SerializeField] private PotionType _type;

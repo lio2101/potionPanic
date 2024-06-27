@@ -89,7 +89,7 @@ namespace LJ
             yield return new WaitForSeconds(_cookingDuration);
 
             _currentPotion = Instantiate(_activeRecipe.PotionPrefab, transform, false);
-            //_currentPotion.transform.localPosition = new Vector3(0f, 1f, 0f);
+            _currentPotion.transform.localPosition = new Vector3(0f, 1f, 0f);
             Debug.Log($"Potion Prefab for {_activeRecipe.Type} Potion created");
             _herbs.Clear();
             UpdateStatusUI();

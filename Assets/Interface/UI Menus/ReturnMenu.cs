@@ -22,7 +22,7 @@ namespace LJ
         {
             EventSystem.current.SetSelectedGameObject(_no.gameObject);
             _no.onClick.AddListener(Cancel);
-            _yes.onClick.AddListener(GameManager.Instance.StartMainMenu); //this might not delete players actually
+            _yes.onClick.AddListener(GameManager.Instance.StartMainMenu);
         }
 
         private void OnDisable()

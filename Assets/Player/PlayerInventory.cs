@@ -35,7 +35,7 @@ namespace LJ
         // --- Unity Functions --------------------------------------------------------------------------------------------
         private void Start()
         {
-            GameManager.Instance.RoundFinished += ClearInventory;
+            ClearInventory();
             UpdateInventoryUI();
             _audioSource = GetComponent<AudioSource>();
         }

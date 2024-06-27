@@ -13,11 +13,11 @@ namespace LJ
         public enum HerbType
         {
             None = 0,
-            Red,
-            Yellow,
-			Blue,
-			Green,
-			Purple
+            Pilz,
+            Alraune,
+			Schnecken,
+			Beeren,
+			Blaetter
         }
 
         // --- Fields -----------------------------------------------------------------------------------------------------
