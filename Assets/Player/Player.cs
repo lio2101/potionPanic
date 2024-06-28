@@ -9,7 +9,7 @@ namespace LJ
 
         // --- Fields -----------------------------------------------------------------------------------------------------
         [SerializeField] private GameObject[] _characterModels;
-        [SerializeField] private MeshRenderer[] _hats;
+        [SerializeField] private SkinnedMeshRenderer[] _hats;
         [SerializeField] private InputActionReference _switchTeamReference;
         [SerializeField] private InputActionReference _changeAppearanceReference;
         [SerializeField] private InputActionReference _readyReference;
@@ -77,7 +77,7 @@ namespace LJ
         {
             _team = team;
 
-            foreach(MeshRenderer hat in _hats)
+            foreach(SkinnedMeshRenderer hat in _hats)
             {
                 hat.material = _team.HatColor;
             }

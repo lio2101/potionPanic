@@ -16,6 +16,7 @@ namespace LJ
         [SerializeField] private SO_RecipeCollection _recipes;
         [SerializeField, Min(0f)] private float _cookingDuration = 2f;
         [SerializeField] private Image[] _statusUI = new Image[3];
+        [SerializeField] private GameObject _barLayout;
 
         [SerializeField] private AudioClip _herbDrop;
         [SerializeField] private AudioClip _cooking;
@@ -72,6 +73,7 @@ namespace LJ
         public SO_PotionData PassPotion()
         {
             Destroy(_currentPotion);
+            UpdateStatusUI();
             return _activeRecipe;
         }
 
@@ -104,16 +106,26 @@ namespace LJ
         private void UpdateStatusUI()
         {
             int index = 0;
-
-            foreach(SO_HerbData item in _herbs)
+            if(!HasPotionReady)
             {
-                _statusUI[index].enabled = true;
-                index++;
+                _barLayout.SetActive(true);
+                foreach(SO_HerbData item in _herbs)
+                {
+                    _statusUI[index].color = Color.red;
+                    _statusUI[index].SetAlpha(1f);
+
+                    index++;
+                }
+
+                for(; index < _statusUI.Length; index++)
+                {
+                    _statusUI[index].color = Color.grey;
+                    _statusUI[index].SetAlpha(0.5f);
+                }
             }
-
-            for(; index < _statusUI.Length; index++)
+            else
             {
-                _statusUI[index].enabled = false;
+                _barLayout.SetActive(false);
             }
 
         }
