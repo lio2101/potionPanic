@@ -616,13 +616,13 @@ CharacterController:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Height: 1
+  m_Height: 2.5
   m_Radius: 0.5
   m_SlopeLimit: 0
   m_StepOffset: 0
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 1.25, z: 0}
 --- !u!114 &2153110316990244014
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -739,6 +739,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _maxSpeed: 4
+  _rotationSpeed: 450
   _playerInput: {fileID: 2453635283363721754}
   _movementReference: {fileID: 0}
 --- !u!114 &3222101675745391109
@@ -898,7 +899,7 @@ PrefabInstance:
     - target: {fileID: 730074980910207313, guid: 69011d1a29b62e4408e75ee79628f4e9,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 730074980910207313, guid: 69011d1a29b62e4408e75ee79628f4e9,
         type: 3}
@@ -1098,7 +1099,7 @@ PrefabInstance:
     - target: {fileID: 730074980910207313, guid: 38847db7e4848814db4b9ddc9ba145de,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 730074980910207313, guid: 38847db7e4848814db4b9ddc9ba145de,
         type: 3}

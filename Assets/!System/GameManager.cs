@@ -23,8 +23,9 @@ namespace LJ
         }
 
         // --- Fields -----------------------------------------------------------------------------------------------------
-        [SerializeField] private GameState _currentGameState;
 
+        [SerializeField] private CountDownController _countdown;
+        [SerializeField] private GameState _currentGameState;
         [SerializeField] private AudioClip _menuMusic;
         [SerializeField] private AudioClip _gameMusic;
         private AudioSource _audioSource;
@@ -116,19 +117,23 @@ namespace LJ
 
         private IEnumerator StartGameRoutine()
         {
-            Time.timeScale = 1f;
+            Time.timeScale = 0f;
 
             SceneManager.LoadScene(2);
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSecondsRealtime(0.1f);
+            
             TeamManager.Instance.SetPlayerGamePositions();
+            _countdown.StartCountDown();
 
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSecondsRealtime(3f);
 
+            Time.timeScale = 1f;
             _currentGameState = GameState.GameRunning;
             ToggleMusic();
             Debug.Log("Start a new game");
             
             _startGameRoutine = null;
+
             RoundActive?.Invoke();
         }
 

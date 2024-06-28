@@ -21,6 +21,7 @@ namespace LJ.UI
         [SerializeField] private GameObject _readyError;
         private Image _errorImage;
         private TMP_Text _errorText;
+        private Coroutine _fadeRoutine;
 
         // --- Properties -------------------------------------------------------------------------------------------------
 
@@ -62,7 +63,13 @@ namespace LJ.UI
             _errorImage.color = Color.red;
             _errorText.color = Color.black;
             _errorText.text = errorMessage;
-            StartCoroutine(ShowErrorRoutine());
+
+            if(_fadeRoutine != null)
+            {
+                StopCoroutine(_fadeRoutine);
+            }
+
+            _fadeRoutine = StartCoroutine(ShowErrorRoutine());
         }
 
         private void OnReadyStatusChanged(Player player, bool isReady)
@@ -72,7 +79,7 @@ namespace LJ.UI
                 Debug.Log("All Players Ready!");
                 _teamManager.Approve();
             }
-            else { Debug.Log("Not all players ready");  }
+            else { Debug.Log("Not all players ready"); }
         }
 
         public void OnGamePaused()
@@ -86,14 +93,14 @@ namespace LJ.UI
         private IEnumerator ShowErrorRoutine()
         {
             yield return new WaitForSeconds(1f);
-            float fadeCount = 1;
+            float alpha = 1;
 
-            while(fadeCount>= 0)
+            while(alpha >= 0)
             {
-                fadeCount -= 0.01f;
-                yield return new WaitForSeconds(0.01f);
-                _errorImage.color = new Color(255, 0, 0, fadeCount);
-                _errorText.color = new Color(0, 0, 0, fadeCount);
+                alpha -= Time.deltaTime;
+                yield return null;
+                _errorImage.color = new Color(255, 0, 0, alpha);
+                _errorText.color = new Color(0, 0, 0, alpha);
             }
             _readyError.SetActive(false);
 
