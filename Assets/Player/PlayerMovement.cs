@@ -65,7 +65,8 @@ namespace LJ
         public void OnMovement(InputValue inputValue)
         {
             _movementInput = inputValue.Get<Vector2>();
-            if(_movementInput != null)
+            Debug.Log(_movementInput.ToString());
+            if(_movementInput.x != 0 || _movementInput.y != 0)
             {
                 Debug.Log("isWalking");
                 _animator.SetBool("isWalking", true);

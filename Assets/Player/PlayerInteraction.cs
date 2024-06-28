@@ -12,10 +12,8 @@ namespace LJ
         [SerializeField] private PlayerInput _playerInput;
         [SerializeField] private InputActionReference _interactReference;
 
-        private GameManager _gm;
         private PlayerInventory _inventory;
-
-        private InputAction _interactAction;
+        private Animator _animator;
 
         private IInteractable _nearestInteractable;
 
@@ -24,19 +22,8 @@ namespace LJ
         // --- Unity Functions --------------------------------------------------------------------------------------------
         void Start()
         {
-            _gm = GameManager.Instance;
             _inventory = GetComponent<PlayerInventory>();
-        }
-
-        private void OnEnable()
-        {
-            _interactAction = _playerInput.actions.FindAction(_interactReference.action.id);
-            //_interactAction.performed += OnInteract;
-        }
-
-        private void OnDisable()
-        {
-            //_interactAction.performed -= OnInteract;
+            _animator = GetComponentInChildren<Animator>();
         }
 
         // --- Event callbacks --------------------------------------------------------------------------------------------
@@ -46,6 +33,7 @@ namespace LJ
         public void OnInteract(InputValue inputValue)
         {
             Debug.Log("OnInteract");
+            _animator.SetBool("isWishing", true);
             if(_nearestInteractable != null)
             {
                 switch(_nearestInteractable)
