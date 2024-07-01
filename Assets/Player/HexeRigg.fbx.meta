@@ -13,12 +13,12 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Cornea.001
-    second: {fileID: 2100000, guid: df5df1b8506618c4cb3762ced76d0ef7, type: 2}
+    second: {fileID: 2100000, guid: 0a9374075afd64c4db6b63136b617eb5, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Cornea.002
-    second: {fileID: 2100000, guid: ccf439570846fce45ae6bdcf6fbb3353, type: 2}
+    second: {fileID: 2100000, guid: 118d6d8f921641245a65ec38dac0781d, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
