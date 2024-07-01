@@ -748,6 +748,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _maxSpeed: 4
   _rotationSpeed: 450
+  _rotationSmoothTime: 0.1
   _playerInput: {fileID: 2453635283363721754}
   _movementReference: {fileID: 0}
 --- !u!114 &3222101675745391109

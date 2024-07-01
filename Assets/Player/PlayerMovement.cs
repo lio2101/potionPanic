@@ -1,10 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
 
 namespace LJ
 {
@@ -15,17 +10,17 @@ namespace LJ
         // --- Fields -----------------------------------------------------------------------------------------------------
         [Tooltip("The maximum movement speed of the player.")]
         [SerializeField, Min(0f)] private float _maxSpeed;
-        [SerializeField] private float _rotationSpeed = 20f;
+        [SerializeField] private float _rotationSmoothTime = .2f;
+        private float _rotationVelocity;
 
         [SerializeField] private PlayerInput _playerInput;
         [SerializeField] private InputActionReference _movementReference;
 
-
         private Camera _camera;
-
         private CharacterController _player;
         private Vector2 _movementInput;
         private Animator _animator;
+        private Vector3 _lastInputDirection;
 
         // --- Properties -------------------------------------------------------------------------------------------------
 
@@ -37,6 +32,11 @@ namespace LJ
             _animator = GetComponentInChildren<Animator>();
         }
 
+        private void OnDisable()
+        {
+            _lastInputDirection = Vector3.zero;
+        }
+
         private void Update()
         {
             if(_camera == null)
@@ -44,40 +44,35 @@ namespace LJ
                 _camera = Camera.main;
             }
 
-            Vector3 playerDirection = transform.forward;
             Vector3 inputDirection = new Vector3(_movementInput.x, 0f, _movementInput.y).normalized;
+
             Quaternion camRotation = Quaternion.Euler(0f, _camera.transform.eulerAngles.y, 0f);
             inputDirection = camRotation * inputDirection;
 
+            // Move
             if(inputDirection != Vector3.zero)
             {
-
-                Debug.Log($"player: {playerDirection} input: {inputDirection}");
-
-                float step = _rotationSpeed * Time.deltaTime;
-
-                //transform.forward = Vector3.RotateTowards(playerDirection, inputDirection, step, 0.0f);
-
-                Quaternion targetRotation = Quaternion.LookRotation(inputDirection, Vector3.up);
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, step);
-
-                inputDirection = _maxSpeed * Time.deltaTime * inputDirection;
-
+                _lastInputDirection = inputDirection;
+                Vector3 movement = _maxSpeed * Time.deltaTime * inputDirection;
                 // Apply gravity
-                inputDirection += Physics.gravity * Time.deltaTime;
-
-                _player.Move(inputDirection);
-
+                movement += Physics.gravity * Time.deltaTime;
+                _player.Move(movement);
             }
 
+            // Rotate
+            if(_lastInputDirection != Vector3.zero)
+            {
+                float currentAngle = Vector3.SignedAngle(Vector3.forward, transform.forward, Vector3.up);
+                float targetAngle = Vector3.SignedAngle(Vector3.forward, _lastInputDirection, Vector3.up);
+                float newAngle = Mathf.SmoothDampAngle(currentAngle, targetAngle, ref _rotationVelocity, _rotationSmoothTime);
+                transform.rotation = Quaternion.AngleAxis(newAngle, Vector3.up);
+            }
         }
 
         // --- Event callbacks --------------------------------------------------------------------------------------------
 
         public void OnMovement(InputValue inputValue)
         {
-            //StartCoroutine(RotatePlayerRoutine(inputValue));
-
             _movementInput = inputValue.Get<Vector2>();
 
             Debug.Log(_movementInput.ToString());
@@ -94,20 +89,7 @@ namespace LJ
         // --- Public/Internal Methods ------------------------------------------------------------------------------------
 
         // --- Protected/Private Methods ----------------------------------------------------------------------------------
-        //private IEnumerator RotatePlayerRoutine(InputValue inputValue)
-        //{
-        //    Vector2 playerDirection = transform.forward;
-        //    Vector2 inputDirection = inputValue.Get<Vector2>();
-        //    float step = _rotationSpeed * Time.deltaTime;
 
-        //    while(playerDirection != inputDirection)
-        //    {
-        //        Vector3 newDirection = Vector3.RotateTowards(playerDirection, inputDirection, step, 0.0f);
-        //        yield return new WaitForEndOfFrame();
-
-        //        playerDirection = newDirection;
-        //    }
-        //}
         // --------------------------------------------------------------------------------------------
     }
 }

@@ -33,7 +33,7 @@ namespace LJ
         private Coroutine _startGameRoutine;
 
         public const int ORDERS_PER_ROUND = 5;
-        public const int ORDER_TIME = 20;
+        public const int ORDER_TIME = 30;
 
         public delegate void CharacterSelectionActiveEvent();
         public event CharacterSelectionActiveEvent CharacterSelectionActive;

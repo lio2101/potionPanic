@@ -16,7 +16,6 @@ namespace LJ.UI
         // --- Fields -----------------------------------------------------------------------------------------------------
         [SerializeField] private CarouselControl _resolutionControl;
         [SerializeField] private CarouselControl _screenSettingControl;
-        [SerializeField] private CarouselControl _frameRateControl;
 
         [SerializeField] private VolumeController _masterVolume;
         [SerializeField] private VolumeController _musicVolume;
@@ -41,11 +40,11 @@ namespace LJ.UI
             }
             _resolutionControl.SetOptions(resolutionList);
 
-            _applyVideoSettingsButton.onClick.AddListener(SettingManager.Instance.ApplyVideoSettings);
         }
 
         private void OnEnable()
         {
+            _applyVideoSettingsButton.onClick.AddListener(SettingManager.Instance.ApplyVideoSettings);
             EventSystem.current.SetSelectedGameObject(_resolutionControl.gameObject);
             _resolutionControl.EnableHighlight();
 
@@ -65,7 +64,6 @@ namespace LJ.UI
             //continue here
             _resolutionControl.ValueChanged += SettingManager.Instance.SetNewResolution;
             _screenSettingControl.ValueChanged += SettingManager.Instance.SetScreenSetting;
-            //_frameRateControl.ValueChanged += PreSaveSettings;
 
             _masterVolume.ValueChanged += SettingManager.Instance.SetMasterVolume;
             _musicVolume.ValueChanged += SettingManager.Instance.SetMusicVolume;
@@ -74,6 +72,8 @@ namespace LJ.UI
         }
         private void OnDisable()
         {
+            _applyVideoSettingsButton.onClick.RemoveListener(SettingManager.Instance.ApplyVideoSettings);
+
             _resolutionControl.ValueChanged -= SettingManager.Instance.SetNewResolution;
             _screenSettingControl.ValueChanged -= SettingManager.Instance.SetScreenSetting;
             _masterVolume.ValueChanged -= SettingManager.Instance.SetMasterVolume;

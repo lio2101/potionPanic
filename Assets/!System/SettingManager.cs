@@ -34,6 +34,7 @@ namespace LJ
         };
 
         private const string FILE_NAME = "settings.json";
+
         private Settings _settings;
 
         // --- Properties -------------------------------------------------------------------------------------------------
@@ -41,6 +42,9 @@ namespace LJ
         public static Settings Settings => Instance != null ? Instance._settings : null;
         public Resolution[] AvailableResolutions { get { return _availableResolutions; } }
         private string SettingsPath => Path.Combine(Application.persistentDataPath, FILE_NAME);
+
+        private Resolution _preSaveRes;
+        private FullScreenMode _preSaveMode;
 
 
         // --- Unity Functions --------------------------------------------------------------------------------------------
@@ -104,16 +108,14 @@ namespace LJ
         public void SetNewResolution(int newValue)
         {
             Debug.Log($"Set New Resolution to {_availableResolutions[newValue].width} x {_availableResolutions[newValue].height}");
-            _settings.resolutionX = _availableResolutions[newValue].width;
-            _settings.resolutionY = _availableResolutions[newValue].height;
+            _preSaveRes.width = _availableResolutions[newValue].width;
+            _preSaveRes.height = _availableResolutions[newValue].height;
             //ApplyVideoSettings();
         }
 
         internal void SetScreenSetting(int newValue)
         {
-            FullScreenMode mode = SUPPORTED_WINDOW_MODES[newValue];
-            _settings.fullScreenMode = mode;
-            Debug.Log($"Set Screen Setting to {mode}");
+            _preSaveMode = SUPPORTED_WINDOW_MODES[newValue];
             //ApplyVideoSettings();
         }
 
@@ -137,6 +139,12 @@ namespace LJ
 
         public void ApplyVideoSettings()
         {
+            _settings.resolutionX = _preSaveRes.width;
+            _settings.resolutionY = _preSaveRes.height;
+
+            _settings.fullScreenMode = _preSaveMode;
+            Debug.Log($"Set Screen Setting to {_preSaveMode}");
+
             Screen.SetResolution(_settings.resolutionX, _settings.resolutionY, _settings.fullScreenMode, _settings.RefreshRate);
         }
         // --- Protected/Private Methods ----------------------------------------------------------------------------------        

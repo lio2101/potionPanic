@@ -1,5 +1,6 @@
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityEngine.InputSystem;
 
 namespace LJ
@@ -16,6 +17,7 @@ namespace LJ
         private Animator _animator;
 
         private IInteractable _nearestInteractable;
+        private GameObject _interactObject;
 
         // --- Properties -------------------------------------------------------------------------------------------------
 
@@ -29,77 +31,87 @@ namespace LJ
         // --- Event callbacks --------------------------------------------------------------------------------------------
 
         // --- Public/Internal Methods ------------------------------------------------------------------------------------
-        
+
         public void OnInteract(InputValue inputValue)
         {
             Debug.Log("OnInteract");
-            _animator.SetBool("isWishing", true);
-            if(_nearestInteractable != null)
+
+            //is looking in direction
+
+            //Vector3 lookAngle = (_interactObject.transform.position - this.gameObject.transform.position).normalized;
+            //float lookAmount = Vector3.Dot(lookAngle, this.gameObject.transform.forward);
+            //if(lookAmount > 0.85)
+
+            if(Vector3.Angle(_interactObject.transform.position, this.gameObject.transform.forward) <= 45)
             {
-                switch(_nearestInteractable)
+                if(_nearestInteractable != null)
                 {
-                    case ItemInteractable item:
-                        switch(item.Item)
-                        {
-                            case SO_HerbData herb:
-                                if(_inventory.CanReceiveHerb)
-                                {
-                                    _inventory.AddHerb(herb);
-                                }
-                                break;
+                    _animator.SetBool("isWishing", true);
 
-                            case SO_PotionData potion:
-                                if(_inventory.CanReceivePotion)
-                                {
-                                    _inventory.AddPotion(potion);
-                                }
-                                break;
-                        }
-                        break;
-
-                    case CauldronInteractable cauldron:
-                        if(_inventory.HasHerbs && cauldron.CanReceiveHerb())
-                        {
-                            cauldron.AddHerb(_inventory.Herbs.Peek());
-                            _inventory.RemoveHerb();
-                        }
-                        else if(_inventory.CanReceivePotion && cauldron.HasPotionReady)
-                        {
-                            _inventory.AddPotion(cauldron.PassPotion());
-                        }
-                        break;
-
-                    case TrashInteractable trash:
-                        if(_inventory.HasHerbs)
-                        {
-                            trash.PlayTrashSound();
-                            _inventory.RemoveHerb();
-                        }
-                        else if(_inventory.HasPotion)
-                        {
-                            trash.PlayTrashSound();
-                            _inventory.RemovePotion();
-                        }
-                        break;
-
-                    case Customer customer:
-                        if(_inventory.HasPotion)
-                        {
-                            if(customer.TryGivePotion(_inventory.Potion))
+                    switch(_nearestInteractable)
+                    {
+                        case ItemInteractable item:
+                            switch(item.Item)
                             {
+                                case SO_HerbData herb:
+                                    if(_inventory.CanReceiveHerb)
+                                    {
+                                        _inventory.AddHerb(herb);
+                                    }
+                                    break;
+
+                                case SO_PotionData potion:
+                                    if(_inventory.CanReceivePotion)
+                                    {
+                                        _inventory.AddPotion(potion);
+                                    }
+                                    break;
+                            }
+                            break;
+
+                        case CauldronInteractable cauldron:
+                            if(_inventory.HasHerbs && cauldron.CanReceiveHerb())
+                            {
+                                cauldron.AddHerb(_inventory.Herbs.Peek());
+                                _inventory.RemoveHerb();
+                            }
+                            else if(_inventory.CanReceivePotion && cauldron.HasPotionReady)
+                            {
+                                _inventory.AddPotion(cauldron.PassPotion());
+                            }
+                            break;
+
+                        case TrashInteractable trash:
+                            if(_inventory.HasHerbs)
+                            {
+                                trash.PlayTrashSound();
+                                _inventory.RemoveHerb();
+                            }
+                            else if(_inventory.HasPotion)
+                            {
+                                trash.PlayTrashSound();
                                 _inventory.RemovePotion();
                             }
-                        }
-                        break;
+                            break;
 
-                    case RecipeBoardController recipeBoard:
+                        case Customer customer:
+                            if(_inventory.HasPotion)
+                            {
+                                if(customer.TryGivePotion(_inventory.Potion))
+                                {
+                                    _inventory.RemovePotion();
+                                }
+                            }
+                            break;
 
-                        Debug.Log("recipeboard in reach");
-                        recipeBoard.ChangeRecipe();
+                        case RecipeBoardController recipeBoard:
 
-                        break;
+                            Debug.Log("recipeboard in reach");
+                            recipeBoard.ChangeRecipe();
+
+                            break;
+                    }
                 }
-
             }
         }
 
@@ -111,6 +123,7 @@ namespace LJ
             {
                 _nearestInteractable = interactable;
             }
+            _interactObject = other.gameObject;
         }
 
         public void OnTriggerExit(Collider other)
