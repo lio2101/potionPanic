@@ -106,7 +106,7 @@ namespace LJ
             Debug.Log($"Set New Resolution to {_availableResolutions[newValue].width} x {_availableResolutions[newValue].height}");
             _settings.resolutionX = _availableResolutions[newValue].width;
             _settings.resolutionY = _availableResolutions[newValue].height;
-            ApplyVideoSettings();
+            //ApplyVideoSettings();
         }
 
         internal void SetScreenSetting(int newValue)
@@ -114,7 +114,7 @@ namespace LJ
             FullScreenMode mode = SUPPORTED_WINDOW_MODES[newValue];
             _settings.fullScreenMode = mode;
             Debug.Log($"Set Screen Setting to {mode}");
-            ApplyVideoSettings();
+            //ApplyVideoSettings();
         }
 
         internal void SetMasterVolume(float newValue, float percentage)
@@ -135,11 +135,11 @@ namespace LJ
             ApplyAudioSettings();
         }
 
-        // --- Protected/Private Methods ----------------------------------------------------------------------------------        
-        private void ApplyVideoSettings()
+        public void ApplyVideoSettings()
         {
             Screen.SetResolution(_settings.resolutionX, _settings.resolutionY, _settings.fullScreenMode, _settings.RefreshRate);
         }
+        // --- Protected/Private Methods ----------------------------------------------------------------------------------        
 
         private void ApplyAudioSettings()
         {

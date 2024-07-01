@@ -22,6 +22,7 @@ namespace LJ.UI
         private void Start()
         {
             _teamColorImage.color = Color.red;
+            _readyImage.color = Color.grey;
         }
 
         private void OnDestroy()

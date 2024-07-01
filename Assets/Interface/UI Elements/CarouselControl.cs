@@ -89,6 +89,11 @@ namespace LJ.UI
             _label.text = _options[_selectedIndex].ToString();
         }
 
+        public void EnableHighlight()
+        {
+            _highlight.enabled = true;
+        }
+
         // --- Protected/Private Methods ----------------------------------------------------------------------------------
 
         // --------------------------------------------------------------------------------------------

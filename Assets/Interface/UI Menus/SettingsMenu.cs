@@ -41,12 +41,13 @@ namespace LJ.UI
             }
             _resolutionControl.SetOptions(resolutionList);
 
-            _applyVideoSettingsButton.onClick.AddListener(SavePreSave);
+            _applyVideoSettingsButton.onClick.AddListener(SettingManager.Instance.ApplyVideoSettings);
         }
 
         private void OnEnable()
         {
             EventSystem.current.SetSelectedGameObject(_resolutionControl.gameObject);
+            _resolutionControl.EnableHighlight();
 
             // Load current settings into the UI
             if(SettingManager.Settings != null)
@@ -62,9 +63,9 @@ namespace LJ.UI
                 _effectVolume.SetValue(SettingManager.Settings.sfxVolume);
             }
             //continue here
-            _resolutionControl.ValueChanged += PreSaveSettings;
-            _screenSettingControl.ValueChanged += PreSaveSettings;
-            _frameRateControl.ValueChanged += PreSaveSettings;
+            _resolutionControl.ValueChanged += SettingManager.Instance.SetNewResolution;
+            _screenSettingControl.ValueChanged += SettingManager.Instance.SetScreenSetting;
+            //_frameRateControl.ValueChanged += PreSaveSettings;
 
             _masterVolume.ValueChanged += SettingManager.Instance.SetMasterVolume;
             _musicVolume.ValueChanged += SettingManager.Instance.SetMusicVolume;
@@ -87,15 +88,7 @@ namespace LJ.UI
         // --- Public/Internal Methods ------------------------------------------------------------------------------------
 
         // --- Protected/Private Methods ----------------------------------------------------------------------------------
-        private void PreSaveSettings(int value)
-        {
 
-        }
-
-        private void SavePreSave()
-        {
-            SettingManager.Instance.SaveSettings();
-        }
         // --------------------------------------------------------------------------------------------
     }
 }
