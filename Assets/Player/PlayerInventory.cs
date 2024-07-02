@@ -12,6 +12,7 @@ namespace LJ
 
         // --- Fields -----------------------------------------------------------------------------------------------------
         [SerializeField] private Image[] _inventorySlots = new Image[3];
+        [SerializeField] private Image _inventoryBubble;
         [SerializeField] private Image _potionSlot;
 
         [SerializeField] private AudioClip _herbPickup;
@@ -82,6 +83,7 @@ namespace LJ
         private void UpdateInventoryUI()
         {
             int index = 0;
+            _inventoryBubble.enabled = !IsInventoryEmpty;
             if(_potion != null)
             {
                 _potionSlot.enabled = true;
@@ -104,6 +106,7 @@ namespace LJ
             {
                 _inventorySlots[index].enabled = false;
             }
+            
         }
 
         private void ClearInventory()

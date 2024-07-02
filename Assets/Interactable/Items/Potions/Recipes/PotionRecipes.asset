@@ -39,7 +39,7 @@ MonoBehaviour:
     _recipeImage: {fileID: 2100000, guid: 9460cf2021046ca48a8dbd8017a6a8c6, type: 2}
   - _ingredients:
     - {fileID: 11400000, guid: 0fe8584af154da8438b8f3b267b36068, type: 2}
-    - {fileID: 11400000, guid: d55517aead55d884b8686ee1f33d722f, type: 2}
+    - {fileID: 11400000, guid: c3f5433231d83ac4988dcf03d46e6b81, type: 2}
     - {fileID: 11400000, guid: 8883467b02ada4d458ded74a4966f27c, type: 2}
     _potion: {fileID: 11400000, guid: 41fbdb3ed7c3b364398a82a12f2de9de, type: 2}
     _recipeImage: {fileID: 2100000, guid: ba0f88c553f44c2478a9f8e42d255622, type: 2}

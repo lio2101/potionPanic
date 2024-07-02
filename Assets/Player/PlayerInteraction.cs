@@ -38,11 +38,14 @@ namespace LJ
 
             //is looking in direction
 
-            //Vector3 lookAngle = (_interactObject.transform.position - this.gameObject.transform.position).normalized;
-            //float lookAmount = Vector3.Dot(lookAngle, this.gameObject.transform.forward);
-            //if(lookAmount > 0.85)
+            //if(Vector3.Angle(_interactObject.transform.position, transform.forward) <= 45)
 
-            if(Vector3.Angle(_interactObject.transform.position, this.gameObject.transform.forward) <= 45)
+            Vector3 direction = (_interactObject.transform.position - transform.position).normalized;
+            direction.y = 0f;
+            float lookAmount = Vector3.Dot(direction, transform.forward);
+            //Debug.Log(lookAmount);
+
+            if(lookAmount > 0)
             {
                 if(_nearestInteractable != null)
                 {

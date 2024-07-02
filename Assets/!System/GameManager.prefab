@@ -354,8 +354,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 128.58
-  m_fontSizeBase: 128.58
+  m_fontSize: 100
+  m_fontSizeBase: 100
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -443,7 +443,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _countdown: {fileID: 818980688087070689}
-  _currentGameState: 0
+  _currentGameState: 1
   _menuMusic: {fileID: 8300000, guid: 0754074b6ade4544ab8c99b5af25a144, type: 3}
   _gameMusic: {fileID: 8300000, guid: 3719c3bfefa00424a9c6b231568ff441, type: 3}
 --- !u!82 &6757071192142382766

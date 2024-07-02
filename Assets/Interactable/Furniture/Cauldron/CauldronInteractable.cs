@@ -111,7 +111,7 @@ namespace LJ
                 _barLayout.SetActive(true);
                 foreach(SO_HerbData item in _herbs)
                 {
-                    _statusUI[index].color = Color.red;
+                    _statusUI[index].color = Color.white;
                     _statusUI[index].SetAlpha(1f);
 
                     index++;

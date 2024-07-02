@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _type: 0
   _icon: {fileID: 21300000, guid: 02aa620acceb8f44f97fafb1e03690e2, type: 3}
-  _potionPrefab: {fileID: 919132149155446097, guid: c96b1fc7ee6be574ea703a94249a3a51,
+  _potionPrefab: {fileID: 97690779461397133, guid: 6c0845a78845b6a4caf1de75994e5941,
     type: 3}
