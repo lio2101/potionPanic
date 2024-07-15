@@ -14,6 +14,7 @@ namespace LJ
         [SerializeField] private InputActionReference _changeAppearanceReference;
         [SerializeField] private InputActionReference _readyReference;
         [SerializeField] private PlayerInput _playerInput;
+        [SerializeField] private PlayerMovement _movement;
 
         private Team _team;
 
@@ -21,6 +22,7 @@ namespace LJ
 
         private int _modelIndex = 0;
 
+        private Animator _animator;
         private InputAction _switchTeamAction;
         private InputAction _changeAppearanceAction;
         private InputAction _readyAction;
@@ -40,6 +42,8 @@ namespace LJ
         public Team Team => _team;
         public int Index => _playerInput.playerIndex;
 
+        public Animator Animator => _animator;
+
         // --- Unity Functions -----------------------------------------------------------------------------------------------
 
         private void OnEnable()
@@ -50,6 +54,7 @@ namespace LJ
 
             _readyAction = _playerInput.actions.FindAction(_readyReference.action.id);
 
+            UpdateAppearance();
         }
 
         private void Start()
@@ -108,10 +113,7 @@ namespace LJ
                 _modelIndex = _characterModels.Length - 1;
             }
 
-            for(int i = 0; i < _characterModels.Length; i++)
-            {
-                _characterModels[i].gameObject.SetActive(i == _modelIndex);
-            }
+            UpdateAppearance();
         }
 
         public void OnReady(InputValue inputValue)
@@ -168,6 +170,16 @@ namespace LJ
         }
 
         // --- Protected/Private Methods ----------------------------------------------------------------------------------
+
+        private void UpdateAppearance()
+        {
+            for(int i = 0; i < _characterModels.Length; i++)
+            {
+                _characterModels[i].gameObject.SetActive(i == _modelIndex);
+            }
+            _animator = GetComponentInChildren<Animator>();
+        }
+
         private void ChangeActionMap()
         {
             if(_playerInput != null)
@@ -191,19 +203,19 @@ namespace LJ
                             Debug.Log("ChangeActionMap to UI");
                             _playerInput.SwitchCurrentActionMap("UI");
                         }
-                            break;
+                        break;
                     case GameManager.GameState.GameIsEnding:
                         Debug.Log("ChangeActionMap to UI");
                         _playerInput.SwitchCurrentActionMap("UI");
                         break;
-                    //case GameManager.GameState.GameOver:
-                    //    Debug.Log("ChangeActionMap to UI");
-                    //    _playerInput.SwitchCurrentActionMap("UI");
-                    //    break;
-                    //case GameManager.GameState.MainMenu:
-                    //    Debug.Log("ChangeActionMap to UI");
-                    //    _playerInput.SwitchCurrentActionMap("UI");
-                    //    break;
+                        //case GameManager.GameState.GameOver:
+                        //    Debug.Log("ChangeActionMap to UI");
+                        //    _playerInput.SwitchCurrentActionMap("UI");
+                        //    break;
+                        //case GameManager.GameState.MainMenu:
+                        //    Debug.Log("ChangeActionMap to UI");
+                        //    _playerInput.SwitchCurrentActionMap("UI");
+                        //    break;
                 }
             }
         }

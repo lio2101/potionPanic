@@ -139,8 +139,11 @@ namespace LJ
 
         public void ApplyVideoSettings()
         {
-            _settings.resolutionX = _preSaveRes.width;
-            _settings.resolutionY = _preSaveRes.height;
+            if(_preSaveRes.width > 0 && _preSaveRes.height > 0f)
+            {
+                _settings.resolutionX = _preSaveRes.width;
+                _settings.resolutionY = _preSaveRes.height;
+            }
 
             _settings.fullScreenMode = _preSaveMode;
             Debug.Log($"Set Screen Setting to {_preSaveMode}");

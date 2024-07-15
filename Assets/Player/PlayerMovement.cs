@@ -17,9 +17,9 @@ namespace LJ
         [SerializeField] private InputActionReference _movementReference;
 
         private Camera _camera;
-        private CharacterController _player;
+        private Player _player;
+        private CharacterController _cc;
         private Vector2 _movementInput;
-        private Animator _animator;
         private Vector3 _lastInputDirection;
 
         // --- Properties -------------------------------------------------------------------------------------------------
@@ -27,9 +27,9 @@ namespace LJ
         // --- Unity Functions --------------------------------------------------------------------------------------------
         private void Awake()
         {
-            _player = GetComponent<CharacterController>();
+            _player = GetComponent<Player>();
+            _cc = GetComponent<CharacterController>();
             _camera = Camera.main;
-            _animator = GetComponentInChildren<Animator>();
         }
 
         private void OnDisable()
@@ -56,7 +56,7 @@ namespace LJ
                 Vector3 movement = _maxSpeed * Time.deltaTime * inputDirection;
                 // Apply gravity
                 movement += Physics.gravity * Time.deltaTime;
-                _player.Move(movement);
+                _cc.Move(movement);
             }
 
             // Rotate
@@ -75,16 +75,19 @@ namespace LJ
         {
             _movementInput = inputValue.Get<Vector2>();
 
-            Debug.Log(_movementInput.ToString());
-            if(_movementInput.x != 0 || _movementInput.y != 0)
+            if(_player.Animator != null)
             {
-                Debug.Log("isWalking");
-                _animator.SetBool("isWalking", true);
+                if(_movementInput.x != 0 || _movementInput.y != 0)
+                {
+                    Debug.Log("isWalking");
+                    _player.Animator.SetBool("isWalking", true);
+                }
+                else
+                {
+                    _player.Animator.SetBool("isWalking", false);
+                }
             }
-            else
-            {
-                _animator.SetBool("isWalking", false);
-            }
+
         }
         // --- Public/Internal Methods ------------------------------------------------------------------------------------
 

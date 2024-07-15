@@ -1144,7 +1144,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &93327044952458795
 Transform:
   m_ObjectHideFlags: 0
@@ -3462,14 +3462,13 @@ GameObject:
   m_Component:
   - component: {fileID: 1181827726450594931}
   - component: {fileID: 6801125974147241002}
-  - component: {fileID: 6770372971415747659}
   m_Layer: 0
   m_Name: ZaubererRigg_Green
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1181827726450594931
 Transform:
   m_ObjectHideFlags: 0
@@ -3532,28 +3531,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!64 &6770372971415747659
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1958329863693389513}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 0}
 --- !u!1 &1966388538841401635
 GameObject:
   m_ObjectHideFlags: 0
@@ -5849,14 +5826,13 @@ GameObject:
   m_Component:
   - component: {fileID: 2397295130298471473}
   - component: {fileID: 8016443879010587752}
-  - component: {fileID: 5902454171241313784}
   m_Layer: 0
   m_Name: ZaubererRigg_Purple
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2397295130298471473
 Transform:
   m_ObjectHideFlags: 0
@@ -5919,28 +5895,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!64 &5902454171241313784
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3030702185949597323}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 0}
 --- !u!1 &3071164350645657690
 GameObject:
   m_ObjectHideFlags: 0
@@ -15516,6 +15470,7 @@ MonoBehaviour:
   _readyReference: {fileID: -8813578018265950118, guid: 8452ecae60dea5e4697d959d8756f638,
     type: 3}
   _playerInput: {fileID: 2453635283363721754}
+  _movement: {fileID: 1460954992735937820}
   _isPlayerOne: 0
 --- !u!114 &2453635283363721754
 MonoBehaviour:
